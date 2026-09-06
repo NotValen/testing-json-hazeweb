@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/haze-prototype.dc.html" }
+  ]
+}

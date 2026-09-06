@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#050505;color:#E8E6E1;font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+html{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
+::selection{background:#B8C7DA;color:#050505}
+@keyframes hzPulse{0%,100%{opacity:.2}50%{opacity:.9}}
+@keyframes hzFloat{0%,100%{transform:translateY(-1.2%)}50%{transform:translateY(1.2%)}}
+@keyframes hzGlitchMain{0%,100%{transform:translate(0,0)}42%{transform:translate(0,0)}42.4%{transform:translate(-9px,3px) skewX(-4deg)}43%{transform:translate(0,0)}43.6%{transform:translate(6px,-2px)}44.2%{transform:translate(0,0)}71%{transform:translate(0,0)}71.4%{transform:translate(4px,0) skewX(3deg)}72%{transform:translate(0,0)}}
+@keyframes hzGlitchA{0%,100%{opacity:0;transform:translate(0,0);clip-path:inset(30% 0 60% 0)}42%{opacity:0}42.2%{opacity:.9;transform:translate(-14px,-3px);clip-path:inset(18% 0 66% 0)}42.8%{opacity:.9;transform:translate(10px,2px);clip-path:inset(52% 0 34% 0)}43.4%{opacity:0}71%{opacity:0}71.3%{opacity:.85;transform:translate(9px,0);clip-path:inset(40% 0 50% 0)}71.9%{opacity:0}}
+@keyframes hzGlitchB{0%,100%{opacity:0;transform:translate(0,0);clip-path:inset(60% 0 20% 0)}42%{opacity:0}42.3%{opacity:.9;transform:translate(12px,4px);clip-path:inset(70% 0 12% 0)}42.9%{opacity:.9;transform:translate(-8px,-2px);clip-path:inset(6% 0 82% 0)}43.5%{opacity:0}71.1%{opacity:0}71.4%{opacity:.85;transform:translate(-11px,1px);clip-path:inset(76% 0 8% 0)}72%{opacity:0}}
+@keyframes hzGlitchSlice{0%,100%{opacity:0;transform:translate(0,0);clip-path:inset(46% 0 50% 0)}42.1%{opacity:0}42.3%{opacity:1;transform:translate(22px,0);clip-path:inset(46% 0 48% 0)}42.6%{opacity:1;transform:translate(-18px,0);clip-path:inset(62% 0 34% 0)}43%{opacity:1;transform:translate(14px,0);clip-path:inset(24% 0 72% 0)}43.4%{opacity:0}71.2%{opacity:0}71.4%{opacity:1;transform:translate(-20px,0);clip-path:inset(55% 0 41% 0)}71.8%{opacity:0}}
+@keyframes hzGlitchFlash{0%,100%{opacity:0}42.2%{opacity:0}42.3%{opacity:.35}42.5%{opacity:0}71.3%{opacity:0}71.4%{opacity:.25}71.6%{opacity:0}}
+@keyframes hzMarquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes hzDrift{0%{transform:translate3d(-5%,0,0)}50%{transform:translate3d(5%,-3%,0)}100%{transform:translate3d(-5%,0,0)}}
+@keyframes hzFlicker{0%{opacity:0}5%{opacity:.85}7%{opacity:.05}11%{opacity:.6}13%{opacity:.12}19%{opacity:1}23%{opacity:.3}27%{opacity:1}33%{opacity:.65}36%{opacity:1}100%{opacity:1}}
+@keyframes hzScan{from{transform:translateY(-140%)}to{transform:translateY(300%)}}
+</style>
+</helmet>
+<div style="position:relative;width:100%;min-height:100vh;cursor:{{ rootCursor }}">
+  <div style="height:{{ spacerH }}"></div>
+
+  <div style="position:{{ stagePos }};inset:0;overflow:hidden;perspective:{{ persp }};perspective-origin:50% 50%;background:#050505">
+    <div ref="{{ worldRef }}" style="position:{{ worldPos }};inset:0;transform-style:preserve-3d;will-change:transform">
+
+      <sc-if value="{{ is3d }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:-20%;pointer-events:none"><div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 32% 58%,rgba(184,199,218,.11),transparent 70%);animation:hzDrift 38s ease-in-out infinite"></div></div>
+        <div style="position:absolute;inset:-20%;pointer-events:none"><div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 66% 40%,rgba(184,199,218,.09),transparent 70%);animation:hzDrift 52s ease-in-out infinite reverse"></div></div>
+        <sc-if value="{{ desktopFog }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:-20%;pointer-events:none"><div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(184,199,218,.08),transparent 70%);animation:hzDrift 64s ease-in-out infinite"></div></div>
+        </sc-if>
+      </sc-if>
+
+      <section ref="{{ sec0 }}" data-screen-label="01 Landing" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z0 }});overflow:hidden;will-change:opacity,filter">
+        <div style="position:absolute;right:-12vw;top:50%;width:76vw;height:60px;background:linear-gradient(90deg,transparent,rgba(184,199,218,.10) 50%,transparent);filter:blur(28px);transform:rotate(-8deg);pointer-events:none"></div>
+        <div style="position:absolute;right:-8vw;top:50%;width:66vw;height:1px;background:linear-gradient(90deg,transparent,rgba(214,224,236,.6) 50%,transparent);transform:rotate(-8deg);pointer-events:none"></div>
+        <div style="position:absolute;right:clamp(-40px,4vw,90px);top:50%;width:clamp(300px,47vw,880px);aspect-ratio:1426/873;transform:translateY(-46%);perspective:1400px;pointer-events:none">
+          <div ref="{{ tiltRef }}" style="width:100%;height:100%;transform-style:preserve-3d;will-change:transform;transform:rotateX(10deg) rotateY(-22deg)">
+            <div style="width:100%;height:100%;transform-style:preserve-3d;animation:hzFloat 9s ease-in-out infinite">
+              <div ref="{{ spinRef }}" style="width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:hzGlitchMain 7s steps(1,end) infinite">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-27px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-25.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-24px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-22.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-21px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-19.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-18px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-16.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-15px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-13.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-12px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-10.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-9px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-7.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-6px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-4.5px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-3px)" src="assets/haze-logo-side.svg">
+                <img alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(-1.5px)" src="assets/haze-logo-side.svg">
+                <img alt="HAZE DIVISION" src="assets/haze-logo-face.svg" style="position:absolute;inset:0;width:100%;height:100%">
+                <img alt="" src="assets/haze-logo.svg" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(1px);filter:brightness(1.6) sepia(1) hue-rotate(160deg) saturate(3);mix-blend-mode:screen;animation:hzGlitchA 7s steps(1,end) infinite;opacity:0">
+                <img alt="" src="assets/haze-logo.svg" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(1px);filter:brightness(1.4) sepia(1) hue-rotate(-40deg) saturate(3);mix-blend-mode:screen;animation:hzGlitchB 7s steps(1,end) infinite;opacity:0">
+                <img alt="" src="assets/haze-logo-face.svg" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ(2px);animation:hzGlitchSlice 7s steps(1,end) infinite;opacity:0">
+                <div style="position:absolute;inset:-4% -6%;background:repeating-linear-gradient(0deg,rgba(184,199,218,.5) 0 2px,transparent 2px 7px);mix-blend-mode:screen;animation:hzGlitchFlash 7s steps(1,end) infinite;opacity:0;pointer-events:none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;left:clamp(16px,4.5vw,70px);top:50%;transform:translateY(-50%);font-family:'League Gothic',Impact,'Arial Narrow',sans-serif;font-size:clamp(56px,15.5vh,26vw);line-height:.84;letter-spacing:-.005em;text-shadow:0 0 44px rgba(232,230,225,.14);user-select:none">
+          <div style="opacity:{{ slOp }};transform:translateY({{ slY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 0ms,transform .9s cubic-bezier(.16,1,.3,1) 0ms">ONLY</div>
+          <div style="opacity:{{ slOp }};transform:translateY({{ slY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 80ms,transform .9s cubic-bezier(.16,1,.3,1) 80ms">ONE</div>
+          <div style="opacity:{{ slOp }};transform:translateY({{ slY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 160ms,transform .9s cubic-bezier(.16,1,.3,1) 160ms">TELL</div>
+          <div style="opacity:{{ slOp }};transform:translateY({{ slY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 240ms,transform .9s cubic-bezier(.16,1,.3,1) 240ms">THE</div>
+          <div style="opacity:{{ slOp }};transform:translateY({{ slY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 320ms,transform .9s cubic-bezier(.16,1,.3,1) 320ms">TRUTH</div>
+        </div>
+        <div style="position:absolute;left:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.16em;opacity:.45">HZ-001 — REV. 2026</div>
+        <div style="position:absolute;right:clamp(8px,1.2vw,18px);top:50%;transform:rotate(90deg) translateX(50%);transform-origin:right center;font-size:10px;letter-spacing:.2em;opacity:.4;white-space:nowrap">ASIA / 2026</div>
+      </section>
+
+      <section ref="{{ sec1 }}" data-screen-label="02 Roster" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z1 }});overflow:hidden;will-change:opacity,filter">
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;transform:translateX({{ bgX }});transition:transform .9s cubic-bezier(.16,1,.3,1)">
+          <sc-for list="{{ artists }}" as="a" hint-placeholder-count="0">
+            <div style="position:absolute;inset:-6% -6% -6% -16%;opacity:{{ a.revealOpacity }};filter:blur({{ a.revealBlur }});-webkit-mask-image:radial-gradient(closest-side,#000 0%,rgba(0,0,0,.7) 35%,rgba(0,0,0,.2) 68%,transparent 100%);mask-image:radial-gradient(closest-side,#000 0%,rgba(0,0,0,.7) 35%,rgba(0,0,0,.2) 68%,transparent 100%);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:{{ a.maskSize }};mask-size:{{ a.maskSize }};-webkit-mask-position:{{ a.maskPos }};mask-position:{{ a.maskPos }};transition:opacity {{ revealDur }} cubic-bezier(.16,1,.3,1),filter {{ revealDur }} cubic-bezier(.16,1,.3,1),-webkit-mask-size {{ maskDur }} cubic-bezier(.16,1,.3,1),mask-size {{ maskDur }} cubic-bezier(.16,1,.3,1),-webkit-mask-position {{ maskDur }} cubic-bezier(.16,1,.3,1),mask-position {{ maskDur }} cubic-bezier(.16,1,.3,1);will-change:opacity,filter,mask-size,mask-position">
+              <sc-if value="{{ a.hasPhoto }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="{{ a.name }}" style="position:absolute;inset:0;background-image:{{ a.bg }};background-size:cover;background-position:center 30%;filter:grayscale(.35) contrast(1.08) brightness(.72);image-rendering:auto"></div></sc-if>
+              <sc-if value="{{ a.noPhoto }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a0c10 0%,#181c24 45%,#0b0d11 100%)">
+                  <div style="position:absolute;inset:9%;border:1px solid rgba(232,230,225,.16)"></div>
+                  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);font-family:'League Gothic',Impact,sans-serif;font-size:min(64vh,64vw);line-height:1;color:rgba(232,230,225,.11);white-space:nowrap">{{ a.name }}</div>
+                  <div style="position:absolute;left:11%;bottom:11%;font-size:11px;letter-spacing:.14em;opacity:.6">PHOTO — {{ a.file }} · 1200 × 1500 · DROP AT PROJECT ROOT</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;left:clamp(20px,18vw,260px);right:clamp(20px,8vw,120px);top:50%;transform:translate({{ listX }},-52%);transition:transform .9s cubic-bezier(.16,1,.3,1)">
+          <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;opacity:.6;margin-bottom:3vh"><span>ROSTER</span><span>REV. 2026</span></div>
+          <sc-for list="{{ rows }}" as="row" hint-placeholder-count="4">
+            <div role="button" tabIndex="0" aria-label="{{ row.aria }}" onPointerEnter="{{ row.onEnter }}" onPointerMove="{{ row.onMove }}" onPointerLeave="{{ row.onLeave }}" onPointerDown="{{ row.onDown }}" onPointerUp="{{ row.onUp }}" onPointerCancel="{{ row.onLeave }}" onClick="{{ row.onClick }}" onKeyDown="{{ row.onKey }}" onContextMenu="{{ preventDefault }}" style="display:grid;grid-template-columns:3ch minmax(0,1fr) auto;gap:clamp(12px,2vw,32px);align-items:baseline;padding:clamp(10px,2.2vh,24px) 0;border-bottom:1px solid rgba(232,230,225,.09);opacity:{{ row.opacity }};transform:translateY({{ row.y }});transition:opacity .8s cubic-bezier(.16,1,.3,1) {{ row.delay }},transform .9s cubic-bezier(.16,1,.3,1) {{ row.delay }};cursor:{{ rowCursor }};user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;outline:none">
+              <span style="font-size:10px;letter-spacing:.14em;opacity:.5">{{ row.code }}</span>
+              <span style="font-size:clamp(28px,5.4vw,62px);letter-spacing:.06em;line-height:1;white-space:nowrap">{{ row.name }}</span>
+              <span style="font-size:10px;letter-spacing:.14em;opacity:{{ row.roleOpacity }};transition:opacity .5s;white-space:nowrap">{{ row.role }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;right:clamp(14px,3vw,48px);bottom:5vh;font-size:10px;letter-spacing:.14em;opacity:.4;transform:rotate(-3deg)">asia side</div>
+      </section>
+
+      <section ref="{{ sec2 }}" data-screen-label="03 About" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z2 }});overflow:hidden;will-change:opacity,filter">
+        <div style="position:absolute;left:-6vw;right:-6vw;top:36%;transform:translateY(-50%) rotate(-2.5deg);overflow:hidden;white-space:nowrap;font-family:'League Gothic',Impact,sans-serif;font-size:clamp(88px,24vh,27vw);line-height:.9;letter-spacing:-.005em;user-select:none">
+          <div style="position:relative">
+            <div style="position:absolute;left:4px;top:5px;right:0;color:#12161c"><div style="display:flex;width:max-content;animation:hzMarquee 56s linear infinite"><span>ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span><span>ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span></div></div>
+            <div style="position:relative"><div style="display:flex;width:max-content;animation:hzMarquee 56s linear infinite"><span style="background:linear-gradient(180deg,#fff 0%,#E6ECF3 12%,#98A5B4 30%,#F5F8FB 47%,#6C7887 53%,#383F48 66%,#C4CDD8 82%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.5px rgba(255,255,255,.22)">ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span><span style="background:linear-gradient(180deg,#fff 0%,#E6ECF3 12%,#98A5B4 30%,#F5F8FB 47%,#6C7887 53%,#383F48 66%,#C4CDD8 82%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.5px rgba(255,255,255,.22)">ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span></div></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:clamp(20px,12vw,200px);top:60%;max-width:40ch;font-size:clamp(12px,1.1vw,15px);line-height:1.8;letter-spacing:.02em;text-wrap:pretty">
+          <div style="opacity:{{ mOp }};transform:translateY({{ mY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 0ms,transform .9s cubic-bezier(.16,1,.3,1) 0ms">we don't do fake. we do late nights, cold rooms and honest records.</div>
+          <div style="opacity:{{ mOp }};transform:translateY({{ mY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 90ms,transform .9s cubic-bezier(.16,1,.3,1) 90ms">haze division is a small crew from asia. one truth, no noise.</div>
+          <div style="opacity:{{ mOp }};transform:translateY({{ mY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 180ms,transform .9s cubic-bezier(.16,1,.3,1) 180ms">est. 2026.</div>
+          <div style="margin-top:3.5vh;font-size:10px;letter-spacing:.16em;opacity:{{ mOpDim }};transition:opacity .9s cubic-bezier(.16,1,.3,1) 300ms">founded by skesh</div>
+        </div>
+        <div style="position:absolute;right:clamp(16px,9vw,140px);top:68%;transform:rotate(-7deg);border:1px solid rgba(232,230,225,.5);padding:9px 13px;font-size:11px;letter-spacing:.22em;opacity:{{ mOpStamp }};transition:opacity .9s cubic-bezier(.16,1,.3,1) 420ms">EST. 2026</div>
+      </section>
+
+      <section ref="{{ sec3 }}" data-screen-label="04 Contact" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z3 }});overflow:hidden;will-change:opacity,filter">
+        <div style="position:absolute;left:clamp(20px,12vw,200px);right:clamp(20px,6vw,90px);bottom:22vh;display:flex;flex-direction:column;gap:2.2vh">
+          <div style="font-size:10px;letter-spacing:.16em;opacity:.6">CONTACT</div>
+          <a href="mailto:contact@hazedivision.asia" style="font-size:clamp(15px,1.6vw,24px);letter-spacing:.02em;line-height:1.45;width:max-content;max-width:100%;border-bottom:1px solid rgba(232,230,225,.25);padding-bottom:2px;opacity:{{ cOp }};transform:translateY({{ cY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 0ms,transform .9s cubic-bezier(.16,1,.3,1) 0ms,color .3s">booking / press → contact@hazedivision.asia</a>
+          <div style="font-size:clamp(13px,1.1vw,15px);opacity:{{ cOpDim }};transform:translateY({{ cY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 90ms,transform .9s cubic-bezier(.16,1,.3,1) 90ms">or just dm.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:2vh;font-size:12px;letter-spacing:.06em;opacity:{{ cOp }};transform:translateY({{ cY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 180ms,transform .9s cubic-bezier(.16,1,.3,1) 180ms">
+            <a href="https://soundcloud.com/hazedivision" target="_blank" rel="noreferrer" style="opacity:.8" style-hover="opacity:1">soundcloud ↗</a>
+            <a href="https://open.spotify.com/artist/42ZKXyAY5TLpkLY2lncU9y" target="_blank" rel="noreferrer" style="opacity:.8" style-hover="opacity:1">spotify ↗</a>
+            <a href="https://www.instagram.com/hazedivision/" target="_blank" rel="noreferrer" style="opacity:.8" style-hover="opacity:1">instagram ↗</a>
+          </div>
+        </div>
+        <div style="position:absolute;left:clamp(20px,12vw,200px);right:clamp(20px,6vw,90px);bottom:6vh;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:10px;letter-spacing:.14em;opacity:.7">
+          <div style="display:flex;align-items:center;gap:12px"><img src="assets/haze-emblem.svg" alt="" style="height:14px;width:auto;display:block;opacity:.9"><span>© 2026 haze division</span></div>
+          <span>hazedivision.asia</span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div ref="{{ fadeRef }}" style="position:fixed;inset:0;background:#050505;opacity:0;pointer-events:none;z-index:15"></div>
+  <div ref="{{ endRef }}" style="position:fixed;left:0;right:0;bottom:6vh;display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;pointer-events:none;z-index:16;font-size:10px;letter-spacing:.22em"><img src="assets/haze-emblem.svg" alt="" style="height:22px;width:auto"><span>hazedivision.asia</span></div>
+  <div ref="{{ veilRef }}" style="position:fixed;inset:0;pointer-events:none;z-index:14;opacity:0;background:radial-gradient(ellipse 80% 70% at 50% 45%,rgba(120,134,150,.42),rgba(5,5,5,.6) 78%)"></div>
+
+  <div style="position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:clamp(14px,2.2vh,22px) clamp(16px,2.4vw,36px);font-size:10px;letter-spacing:.16em;z-index:20">
+    <a href="#top" onClick="{{ goHome }}" style="letter-spacing:.1em;padding:10px 0;min-height:44px;display:flex;align-items:center;gap:12px"><img src="assets/haze-emblem.svg" alt="" style="height:12px;width:auto;opacity:.9">hazedivision.asia</a>
+    <div style="display:flex;gap:10px;align-items:center;min-height:44px">
+      <a href="#roster" onClick="{{ goRoster }}" style="opacity:{{ nav1 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">ROSTER</a><span style="opacity:.3">/</span>
+      <a href="#about" onClick="{{ goAbout }}" style="opacity:{{ nav2 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">ABOUT</a><span style="opacity:.3">/</span>
+      <a href="#contact" onClick="{{ goContact }}" style="opacity:{{ nav3 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">CONTACT</a>
+    </div>
+  </div>
+  <div style="position:fixed;left:52%;bottom:3vh;transform:translateX(-50%);font-size:10px;letter-spacing:.24em;z-index:20;visibility:{{ cueVis }};animation:hzPulse 2.4s ease-in-out infinite;pointer-events:none;white-space:nowrap">SCROLL ↓</div>
+
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:39;background:radial-gradient(ellipse at 50% 50%,transparent 52%,rgba(0,0,0,.62) 100%)"></div>
+  <div ref="{{ grainRef }}" style="position:fixed;inset:-256px;pointer-events:none;z-index:60;background-image:url('assets/grain.png');background-size:256px 256px;opacity:.08"></div>
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:61;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);opacity:.5"></div>
+
+  <sc-if value="{{ panelMounted }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePanel }}" aria-hidden="true" style="position:fixed;inset:0;z-index:50;cursor:{{ rowCursor }};display:{{ backdropDisplay }}"></div>
+    <div role="dialog" aria-modal="true" onTouchStart="{{ onSheetTouchStart }}" onTouchMove="{{ onSheetTouchMove }}" style="position:fixed;top:0;right:0;bottom:0;width:{{ panelWidth }};max-width:100vw;background:{{ panelBg }};transform:{{ panelTransform }};transition:transform .9s cubic-bezier(.16,1,.3,1);z-index:51;display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none;box-sizing:border-box;padding-left:{{ panelPadLeft }}">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px clamp(18px,2.4vw,34px);font-size:10px;letter-spacing:.16em;position:sticky;top:0;z-index:2">
+        <button onClick="{{ closePanel }}" style="all:unset;font:inherit;letter-spacing:.16em;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;opacity:.85;white-space:nowrap" style-hover="opacity:1;color:#fff">× CLOSE</button>
+        <span style="opacity:.5;white-space:nowrap">{{ panelArtist.code }}</span>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="width:36px;height:2px;background:rgba(232,230,225,.3);margin:-4px auto 10px"></div></sc-if>
+      <div style="padding:0 clamp(18px,2.4vw,34px) 44px;display:flex;flex-direction:column;gap:22px">
+        <div style="position:relative;aspect-ratio:4/5;max-height:46vh;background:#0b0d11;overflow:hidden;border:1px solid rgba(232,230,225,.1)">
+          <sc-if value="{{ panelArtist.hasPhoto }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="{{ panelArtist.name }}" style="position:absolute;inset:0;background-image:{{ panelArtist.bg }};background-size:cover;background-position:center;filter:grayscale(.25) contrast(1.06)"></div></sc-if>
+          <sc-if value="{{ panelArtist.noPhoto }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a0c10 0%,#1a1f27 50%,#0b0d11 100%)">
+              <div style="position:absolute;inset:7%;border:1px solid rgba(232,230,225,.16)"></div>
+              <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);font-family:'League Gothic',Impact,sans-serif;font-size:min(34vh,80vw);line-height:1;color:rgba(232,230,225,.12);filter:blur(2px);white-space:nowrap">{{ panelArtist.name }}</div>
+              <div style="position:absolute;left:10%;bottom:9%;right:10%;font-size:10px;letter-spacing:.14em;line-height:1.8;opacity:.65">PHOTO — {{ panelArtist.file }}<br>1200 × 1500 · SOUNDCLOUD PFP<br>DROP AT PROJECT ROOT</div>
+            </div>
+          </sc-if>
+          <div style="position:absolute;inset:0;background-image:url('assets/grain.png');opacity:.12;pointer-events:none"></div>
+        </div>
+        <div style="font-size:clamp(13px,1.2vw,15px);letter-spacing:.16em">{{ panelArtist.name }} — {{ panelArtist.role }}</div>
+        <div style="font-size:clamp(12px,1vw,14px);line-height:1.8;opacity:.85;max-width:46ch;text-wrap:pretty">{{ panelArtist.bio }}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+          <sc-for list="{{ panelArtist.links }}" as="l" hint-placeholder-count="3">
+            <a href="{{ l.href }}" target="_blank" rel="noreferrer" style="border:1px solid rgba(232,230,225,.35);padding:0 16px;font-size:11px;letter-spacing:.14em;color:#E8E6E1;min-height:44px;display:inline-flex;align-items:center;box-sizing:border-box;transition:background .45s,color .45s,border-color .45s" style-hover="background:linear-gradient(180deg,#fff 0%,#E6ECF3 20%,#98A5B4 45%,#F5F8FB 52%,#6C7887 62%,#C4CDD8 100%);color:#050505;border-color:transparent">{{ l.label }} ↗</a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ fine }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ cursorRef }}" style="position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:70;opacity:0;transition:opacity .3s"><div ref="{{ cursorInRef }}" style="width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#C9D2DC 35%,#5B6572 72%,#252b32 100%);transition:transform .45s cubic-bezier(.16,1,.3,1);will-change:transform"></div></div>
+  </sc-if>
+
+  <sc-if value="{{ annotate }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;right:clamp(12px,2vw,30px);bottom:clamp(50px,8vh,70px);max-width:min(78vw,380px);border:1px dashed rgba(184,199,218,.5);padding:10px 12px;font-size:10px;line-height:1.7;letter-spacing:.04em;color:#B8C7DA;background:rgba(5,5,5,.7);z-index:65;pointer-events:none">
+      <sc-for list="{{ annoLines }}" as="ln" hint-placeholder-count="3"><div>{{ ln }}</div></sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ loadingVisible }}" hint-placeholder-val="{{ true }}">
+    <div onClick="{{ skipLoading }}" style="position:fixed;inset:0;background:#050505;z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:{{ loadingOp }};transition:opacity .85s cubic-bezier(.16,1,.3,1);cursor:pointer">
+      <div style="position:relative;width:min(66vw,560px);aspect-ratio:1426/873;animation:hzFlicker 2.4s linear 1 both">
+        <img src="assets/haze-logo-chrome.svg" alt="HAZE DIVISION" style="width:100%;height:100%;display:block">
+        <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none"><div style="position:absolute;left:0;right:0;top:0;height:30%;background:linear-gradient(180deg,transparent,rgba(184,199,218,.22),transparent);animation:hzScan 1.7s linear infinite"></div></div>
+      </div>
+      <div style="margin-top:5vh;font-size:clamp(12px,1.3vw,16px);letter-spacing:.26em;line-height:1.9;text-align:center;height:calc(1.9em * 5)">
+        <div>{{ typed0 }}</div><div>{{ typed1 }}</div><div>{{ typed2 }}</div><div>{{ typed3 }}</div><div>{{ typed4 }}</div>
+      </div>
+      <div style="position:absolute;left:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.2em;opacity:.7">LOADING {{ pctText }}%</div>
+      <div style="position:absolute;right:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.16em;opacity:.4">hazedivision.asia</div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;full&quot;,&quot;options&quot;:[&quot;full&quot;,&quot;reduced&quot;],&quot;tsType&quot;:&quot;'full' | 'reduced'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showLoading&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.1,&quot;min&quot;:0,&quot;max&quot;:0.2,&quot;step&quot;:0.01,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Texture&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Handoff&quot;}}">
+const D = 1400;
+const ARTISTS = [
+  { id: 'skesh', name: 'SKESH', role: 'FOUNDER', code: 'HZ-001', photo: 'https://i1.sndcdn.com/avatars-jyryWKRy4MtZhM3K-aRFJEw-t500x500.jpg', photoFallback: 'https://i1.sndcdn.com/avatars-jyryWKRy4MtZhM3K-aRFJEw-t200x200.jpg', bio: 'founder. makes the beats and most of the noise. based somewhere in asia. only one tell the truth.', links: [{ label: 'SOUNDCLOUD', href: 'https://soundcloud.com/skeshbtw' }, { label: 'SPOTIFY', href: 'https://open.spotify.com/artist/42ZKXyAY5TLpkLY2lncU9y' }, { label: 'INSTAGRAM', href: 'https://www.instagram.com/hazedivision/' }] },
+  { id: 'nuzzi', name: 'NUZZI', role: 'ARTIST', code: 'HZ-002', photo: 'https://i1.sndcdn.com/avatars-VIMw752zTn4R8tnJ-MMG35Q-t500x500.jpg', photoFallback: 'https://i1.sndcdn.com/avatars-VIMw752zTn4R8tnJ-MMG35Q-t200x200.jpg', bio: "nuzzi. haze division. hums the melodies you can't get out of your head. more coming.", links: [{ label: 'SOUNDCLOUD', href: 'https://soundcloud.com/1nuji' }, { label: 'SPOTIFY', href: 'https://open.spotify.com/artist/0Lsj6iyj2QAJA6X2rOCLy7' }, { label: 'INSTAGRAM', href: 'https://www.instagram.com/hazedivision/' }] },
+];
+const ANNO = [
+  ['CAM 01 · z 0 · scrub: scrollY/vh → camZ, lerp .085', 'logo: rotateY 360°/40s linear ∞ · float ±1.6% 9s · tilt rx -6..6 ry -9..9 → cursor, lerp .06', 'slogan: opacity 0→1 + y 8→0 · 900ms expo.out · 80ms stagger', 'cue: opacity .2↔.9 · 2.4s ease-in-out ∞'],
+  ['CAM 02 · z -1400 · fog: next stop opacity 1-t·.8, blur t·12px', 'reveal: blur 24→6px · opacity 0→.9 · 900ms expo.out · grain stays on top', 'other rows: opacity 1→.4 · 600ms · role tag opacity 0→.7 · 500ms', 'panel: translateX 100%→0 (mobile: translateY) · 900ms expo.out · backdrop blur 6px 800ms'],
+  ['CAM 03 · z -2800', 'marquee: translateX 0→-50% · 56s linear ∞ · band rotate -2.5°', 'manifesto: opacity + y 8→0 · 900ms expo.out · 90ms stagger', 'stamp: opacity 0→1 · 900ms · 420ms delay'],
+  ['CAM 04 · z -4200', 'contact lines: opacity + y 8→0 · 900ms · 90ms stagger', 'fade: stage → #050505 over final half stop (scrubbed), end lockup opacity → .7', 'grain: 8% · random offset @ 12fps · scanlines 1/3px @ 50%'],
+];
+const EASE = 'cubic-bezier(.16,1,.3,1)';
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const q = new URLSearchParams(window.location.search);
+    this.q = q;
+    this.frozen = q.get('frozen') === '1';
+    this.stopQ = q.has('stop') ? Math.max(0, Math.min(3, parseFloat(q.get('stop')) || 0)) : null;
+    const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    const prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loadingQ = q.get('loading') === '1';
+    const showLoading = loadingQ || ((props.showLoading ?? true) && this.stopQ === null && !q.has('motion') && !this.frozen && !prm);
+    this.state = {
+      w: window.innerWidth, h: window.innerHeight, fine, prm,
+      loading: showLoading, loadingOp: 1,
+      typed: loadingQ ? ['ONLY', 'ONE', 'TELL', 'TH', ''] : ['', '', '', '', ''],
+      pct: loadingQ ? 64 : 0,
+      hover: q.get('hover') || null,
+      panel: ARTISTS.some(a => a.id === q.get('panel')) ? q.get('panel') : null, panelShown: ARTISTS.some(a => a.id === q.get('panel')),
+      active: Math.round(this.stopQ || 0),
+      has: {},
+    };
+    this.r = { world: React.createRef(), secs: [0, 1, 2, 3].map(() => React.createRef()), fade: React.createRef(), end: React.createRef(), grain: React.createRef(), cur: React.createRef(), curIn: React.createRef(), tilt: React.createRef(), spin: React.createRef(), veil: React.createRef() };
+    this.camZ = (this.stopQ || 0) * D; this.targetZ = this.camZ; this.fadeT = 0; this.fadeCur = 0;
+    this.tx = 0; this.ty = 0; this.ctx = 0; this.cty = 0;
+    this.timers = []; this.holding = false;
+  }
+  get motionMode() { return this.q.get('motion') || this.props.motion || 'full'; }
+  get reduced() { return this.motionMode === 'reduced' || this.state.prm; }
+  get isMobile() { return this.state.w < 640; }
+  get locked() { return this.stopQ !== null || this.frozen; }
+
+  componentDidMount() {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (this.state.loading || this.stopQ !== null) window.scrollTo(0, 0);
+    this.onResize = () => this.setState({ w: window.innerWidth, h: window.innerHeight });
+    this.onKey = e => { if (e.key === 'Escape' && this.state.panel) this.closePanel(); };
+    this.onScroll = () => this.readScroll();
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('keydown', this.onKey);
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    if (this.state.fine) {
+      this.onMove = e => {
+        this.tx = (e.clientX / window.innerWidth - .5) * 2; this.ty = (e.clientY / window.innerHeight - .5) * 2;
+        const c = this.r.cur.current; if (c) { c.style.left = e.clientX + 'px'; c.style.top = e.clientY + 'px'; c.style.opacity = 1; }
+      };
+      window.addEventListener('mousemove', this.onMove);
+    }
+    this.applyGrain();
+    this.syncMode(true);
+    if (this.frozen && this.r.spin.current) { this.r.spin.current.style.animation = 'none'; }
+    ARTISTS.forEach(a => {
+      const im = new Image();
+      im.onload = () => this.setState(s => ({ has: { ...s.has, [a.id]: im.src } }));
+      im.onerror = () => { if (im.src !== a.photoFallback) im.src = a.photoFallback; };
+      im.src = a.photo;
+    });
+    if (!this.frozen) this.grainTimer = setInterval(() => { const g = this.r.grain.current; if (g) g.style.backgroundPosition = `${Math.floor(Math.random() * 256)}px ${Math.floor(Math.random() * 256)}px`; }, 83);
+    if (this.state.loading && !this.frozen) this.runLoading();
+    this.updateLock();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); window.removeEventListener('scroll', this.onScroll);
+    if (this.onMove) window.removeEventListener('mousemove', this.onMove);
+    cancelAnimationFrame(this.raf); clearInterval(this.grainTimer); clearInterval(this.progTimer); clearTimeout(this.closeTimer); this.timers.forEach(clearTimeout);
+    document.documentElement.style.overflow = '';
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.grain !== this.props.grain) this.applyGrain();
+    if (prevProps.motion !== this.props.motion) this.syncMode(false);
+  }
+  applyGrain() { const g = this.r.grain.current; if (g) g.style.opacity = String(this.props.grain ?? 0.08); }
+  updateLock() { setTimeout(() => { document.documentElement.style.overflow = (this.locked && !this.reduced) || this.state.loading || this.state.panel ? 'hidden' : ''; }, 0); }
+  syncMode(initial) {
+    cancelAnimationFrame(this.raf);
+    if (this.reduced) {
+      this.r.secs.forEach(ref => { const el = ref.current; if (el) { el.style.opacity = ''; el.style.filter = ''; el.style.visibility = ''; el.style.pointerEvents = ''; el.style.transform = ''; el.style.zIndex = ''; } });
+      if (this.r.world.current) this.r.world.current.style.transform = '';
+      if (this.r.fade.current) this.r.fade.current.style.opacity = 0;
+      if (this.r.end.current) this.r.end.current.style.opacity = 0;
+      if (this.r.veil.current) this.r.veil.current.style.opacity = 0;
+      if (!initial) window.scrollTo(0, 0);
+    } else if (this.frozen) { this.applyCamera(); }
+    else if (this.stopQ !== null) { this.camZ = this.targetZ = this.stopQ * D; this.loop(); }
+    else { if (!initial) { window.scrollTo(0, 0); this.camZ = 0; this.targetZ = 0; } this.readScroll(); this.loop(); }
+    this.updateLock();
+  }
+  readScroll() {
+    if (this.stopQ !== null) return;
+    const u = window.scrollY / Math.max(1, window.innerHeight);
+    this.targetZ = Math.max(0, Math.min(3, u)) * D;
+    this.fadeT = Math.max(0, Math.min(1, (u - 3) / 0.5));
+  }
+  loop() {
+    this.raf = requestAnimationFrame(() => this.loop());
+    const k = .16;
+    this.camZ += (this.targetZ - this.camZ) * k; if (Math.abs(this.targetZ - this.camZ) < .05) this.camZ = this.targetZ;
+    this.fadeCur += (this.fadeT - this.fadeCur) * k;
+    this.ctx += (this.tx - this.ctx) * .06; this.cty += (this.ty - this.cty) * .06;
+    const t = this.r.tilt.current; if (t) t.style.transform = `rotateX(${(10 - this.cty * 6).toFixed(2)}deg) rotateY(${(-22 + this.ctx * 10).toFixed(2)}deg)`;
+    this.applyCamera();
+  }
+  applyCamera() {
+    const active = Math.round(this.camZ / D);
+    if (this.state.panel && this.targetZ !== this.camZ) this.targetZ = this.camZ;
+    const world = this.r.world.current;
+    if (world) { world.style.transform = `translate3d(0,0,${this.camZ.toFixed(1)}px)`; }
+    const stage = world && world.parentElement;
+    if (stage) {
+      stage.style.perspective = 'none';
+      world.style.transform = 'none';
+      world.style.transformStyle = 'flat';
+      for (let i = 0; i < 4; i++) {
+        const el = this.r.secs[i].current; if (!el) continue;
+        const dist = i * D - this.camZ;
+        const sc = 1100 / (1100 + dist);
+        el.style.transform = Math.abs(sc - 1) < .002 ? 'none' : `scale(${Math.max(.05, sc).toFixed(4)})`;
+      }
+    }
+    const frac = (this.camZ / D) % 1;
+    if (this.r.veil.current) this.r.veil.current.style.opacity = (Math.pow(Math.sin(Math.PI * frac), 1.4) * .85).toFixed(3);
+    const maxBlur = this.isMobile ? 6 : 10;
+    for (let i = 0; i < 4; i++) {
+      const el = this.r.secs[i].current; if (!el) continue;
+      const dist = i * D - this.camZ; let op, blur = 0;
+      if (dist >= 0) { const t = dist / D; op = Math.pow(Math.max(0, 1 - t), 1.6); blur = Math.min(maxBlur, Math.max(0, t - .06) * 12); }
+      else { const t = (-dist) / (D * .5); op = Math.max(0, 1 - t); blur = Math.min(maxBlur, t * 9); }
+
+      el.style.opacity = op.toFixed(3);
+      el.style.filter = blur > .3 ? `blur(${blur.toFixed(1)}px)` : 'none';
+      el.style.visibility = op <= .005 ? 'hidden' : 'visible';
+      el.style.pointerEvents = i === active ? 'auto' : 'none';
+      el.style.zIndex = i === active ? '2' : '1';
+    }
+    if (this.r.fade.current) this.r.fade.current.style.opacity = (this.fadeCur * .94).toFixed(3);
+    if (this.r.end.current) this.r.end.current.style.opacity = (this.fadeCur * .7).toFixed(3);
+    if (active !== this.state.active) this.setState({ active });
+  }
+  runLoading() {
+    const lines = ['ONLY', 'ONE', 'TELL', 'THE', 'TRUTH']; let li = 0, ci = 0; const typed = ['', '', '', '', ''];
+    const step = () => {
+      if (li >= 5) return; ci++; typed[li] = lines[li].slice(0, ci); this.setState({ typed: typed.slice() });
+      if (ci >= lines[li].length) { li++; ci = 0; this.timers.push(setTimeout(step, 150)); } else this.timers.push(setTimeout(step, 58));
+    };
+    this.timers.push(setTimeout(step, 550));
+    this.progTimer = setInterval(() => {
+      this.setState(s => {
+        if (s.pct >= 100) return null;
+        const p = Math.min(100, s.pct + 1 + Math.floor(Math.random() * 6));
+        if (p >= 100) { clearInterval(this.progTimer); this.timers.push(setTimeout(() => this.finishLoading(), 420)); }
+        return { pct: p };
+      });
+    }, 95);
+  }
+  finishLoading() {
+    if (this.finishing) return; this.finishing = true;
+    this.timers.forEach(clearTimeout); clearInterval(this.progTimer);
+    this.setState({ pct: 100, typed: ['ONLY', 'ONE', 'TELL', 'THE', 'TRUTH'], loadingOp: 0 });
+    this.timers.push(setTimeout(() => { this.setState({ loading: false }); this.updateLock(); }, 850));
+  }
+  setCursorScale(s) { const c = this.r.curIn.current; if (c) c.style.transform = `scale(${s})`; }
+  setHover(id, e) {
+    const patch = {};
+    if (id !== this.state.hover) patch.hover = id;
+    if (e && id) { patch.mx = Math.round(e.clientX / window.innerWidth * 100); patch.my = Math.round(e.clientY / window.innerHeight * 100); }
+    if (Object.keys(patch).length) this.setState(patch);
+    this.setCursorScale(id ? 3 : 1);
+  }
+  cancelHold() { clearTimeout(this.holdTimer); if (this.holding) { this.holding = false; this.setState({ hover: null }); } }
+  openPanel(id) {
+    clearTimeout(this.closeTimer);
+    this.openedAt = performance.now();
+    this.setCursorScale(1);
+    this.setState({ panel: id, panelShown: false, hover: null });
+    this.updateLock();
+    this.timers.push(setTimeout(() => { if (this.state.panel === id) this.setState({ panelShown: true }); }, 40));
+  }
+  closePanel() {
+    if (!this.state.panel) return;
+    if (performance.now() - (this.openedAt || 0) < 400) return;
+    this.setCursorScale(1);
+    this.setState({ panelShown: false });
+    clearTimeout(this.closeTimer);
+    this.closeTimer = setTimeout(() => { this.setState({ panel: null }); this.updateLock(); }, 900);
+  }
+  rowHandlers(a) {
+    return {
+      onEnter: e => { if (e.pointerType === 'mouse') this.setHover(a.id, e); },
+      onMove: e => { if (e.pointerType === 'mouse' && this.state.hover === a.id) { const mx = Math.round(e.clientX / window.innerWidth * 100), my = Math.round(e.clientY / window.innerHeight * 100); if (Math.abs(mx - (this.state.mx || 0)) > 1 || Math.abs(my - (this.state.my || 0)) > 1) this.setState({ mx, my }); } },
+      onLeave: e => { if (e.pointerType === 'mouse') this.setHover(null); this.cancelHold(); },
+      onDown: e => { if (e.pointerType === 'mouse') return; clearTimeout(this.holdTimer); this.holdTimer = setTimeout(() => { this.holding = true; this.setState({ hover: a.id }); }, 380); },
+      onUp: e => {
+        if (e.pointerType === 'mouse') return;
+        clearTimeout(this.holdTimer);
+        if (this.holding) { this.holding = false; this.suppressClick = true; this.setState({ hover: null }); }
+      },
+      onClick: e => { e.preventDefault(); if (this.suppressClick) { this.suppressClick = false; return; } this.openPanel(a.id); },
+      onKey: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.openPanel(a.id); } },
+    };
+  }
+  goTo(i, e) {
+    if (e) e.preventDefault();
+    if (this.state.panel) this.closePanel();
+    if (this.reduced) { const el = this.r.secs[i].current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); return; }
+    if (this.locked) return;
+    window.scrollTo(0, i * window.innerHeight);
+  }
+  renderVals() {
+    const s = this.state, reduced = this.reduced, is3d = !reduced, mobile = this.isMobile, fine = s.fine && !reduced;
+    const vis = i => reduced || this.frozen ? true : (s.active === i && !s.loading);
+    const open = s.panelShown ? s.panel : null;
+    const focus = s.hover || open;
+    const artists = ARTISTS.map((a, i) => {
+      const has = !!s.has[a.id], held = open === a.id, on = s.hover === a.id && !held;
+      const rowY = mobile ? (42 + i * 9) : (44 + i * 11);
+      const px = s.mx || 58, py = s.my || rowY;
+      return { ...a, hasPhoto: has, noPhoto: !has, bg: `url('${s.has[a.id] || a.photo}')`,
+        revealOpacity: held ? 1 : (on ? .8 : 0), revealBlur: held ? '5px' : (on ? '3px' : '18px'),
+        maskSize: held ? '440% 440%' : (on ? (mobile ? '96% 52%' : '34% 60%') : '12% 12%'),
+        maskPos: mobile ? `50% ${rowY}%` : `${px}% ${py}%`,
+        file: a.id.toUpperCase() + '.JPG' };
+    });
+    const rosterVis = vis(1);
+    const rows = ARTISTS.map((a, i) => ({
+      id: a.id, code: a.code.slice(3), name: a.name, role: '— ' + a.role, aria: a.name + ' — ' + a.role,
+      roleOpacity: focus === a.id ? .7 : 0,
+      opacity: !rosterVis ? 0 : (focus && focus !== a.id ? .35 : 1),
+      y: rosterVis ? '0px' : '10px', delay: (i * 80) + 'ms', ...this.rowHandlers(a),
+    })).concat([2, 3].map(i => ({ id: '', code: '00' + (i + 1), name: '— — —', role: '', aria: 'open slot', roleOpacity: 0, opacity: !rosterVis ? 0 : (focus ? .12 : .28), y: rosterVis ? '0px' : '10px', delay: (i * 80) + 'ms' })));
+    const pa = ARTISTS.find(a => a.id === s.panel) || null;
+    const panelArtist = pa ? { ...pa, hasPhoto: !!s.has[pa.id], noPhoto: !s.has[pa.id], bg: `url('${s.has[pa.id] || pa.photo}')`, file: pa.id.toUpperCase() + '.JPG' } : null;
+    const l0 = vis(0), m = vis(2), c = vis(3);
+    return {
+      is3d, isMobile: mobile, fine, desktopFog: !mobile,
+      stagePos: is3d ? 'fixed' : 'relative', worldPos: is3d ? 'absolute' : 'relative', secPos: is3d ? 'absolute' : 'relative', spacerH: is3d ? '450vh' : '0px',
+      persp: 'none', z0: '0px', z1: '0px', z2: '0px', z3: '0px',
+      rootCursor: fine ? 'none' : 'auto', rowCursor: fine ? 'none' : 'pointer',
+      revealDur: reduced ? '0s' : '.9s', maskDur: reduced ? '0s' : '1.4s',
+      slOp: l0 ? 1 : 0, slY: l0 ? '0px' : '10px',
+      mOp: m ? 1 : 0, mOpDim: m ? .6 : 0, mOpStamp: m ? .75 : 0, mY: m ? '0px' : '8px',
+      cOp: c ? 1 : 0, cOpDim: c ? .75 : 0, cY: c ? '0px' : '8px',
+      artists, rows,
+      panelMounted: !!pa, panelArtist, backdropDisplay: pa && s.panelShown ? 'block' : 'none', panelWidth: mobile ? '100vw' : 'clamp(420px, 46vw, 680px)',
+      panelBg: mobile ? 'linear-gradient(180deg,rgba(5,5,5,.55) 0%,rgba(5,5,5,.92) 30%,rgba(5,5,5,.97) 100%)' : 'linear-gradient(90deg,rgba(5,5,5,0) 0%,rgba(5,5,5,.72) 18%,rgba(5,5,5,.9) 100%)',
+      panelPadLeft: mobile ? '0px' : 'clamp(48px, 7vw, 110px)',
+      panelTransform: s.panelShown ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)',
+      listX: s.panelShown ? (mobile ? '-30vw' : '-13vw') : '0px', bgX: s.panelShown ? (mobile ? '-10vw' : '-8vw') : '0px',
+      closePanel: () => this.closePanel(),
+      onSheetTouchStart: e => { this.sy = e.touches[0].clientY; this.sx = e.touches[0].clientX; },
+      onSheetTouchMove: e => { if (!mobile || this.sy == null) return; const dy = e.touches[0].clientY - this.sy, dx = e.touches[0].clientX - this.sx; if ((dx > 90 && Math.abs(dy) < 80) || (dy > 120 && Math.abs(dx) < 70)) { this.sy = null; this.closePanel(); } },
+      loadingVisible: s.loading, loadingOp: s.loadingOp,
+      typed0: s.typed[0], typed1: s.typed[1], typed2: s.typed[2], typed3: s.typed[3], typed4: s.typed[4],
+      pctText: String(s.pct).padStart(3, '0'),
+      skipLoading: () => this.finishLoading(),
+      goHome: e => this.goTo(0, e), goRoster: e => this.goTo(1, e), goAbout: e => this.goTo(2, e), goContact: e => this.goTo(3, e),
+      nav1: s.active === 1 ? 1 : .55, nav2: s.active === 2 ? 1 : .55, nav3: s.active === 3 ? 1 : .55,
+      cueVis: (s.active >= 3 || reduced || s.panel) ? 'hidden' : 'visible',
+      preventDefault: e => e.preventDefault(),
+      worldRef: this.r.world, sec0: this.r.secs[0], sec1: this.r.secs[1], sec2: this.r.secs[2], sec3: this.r.secs[3],
+      fadeRef: this.r.fade, endRef: this.r.end, grainRef: this.r.grain, cursorRef: this.r.cur, cursorInRef: this.r.curIn, tiltRef: this.r.tilt, spinRef: this.r.spin, veilRef: this.r.veil,
+      annotate: !!this.props.annotations, annoLines: ANNO[s.active] || ANNO[0],
+    };
+  }
+}
+</script>
+</body>
+</html>
