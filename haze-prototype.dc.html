@@ -24,6 +24,10 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
 @keyframes hzGlitchSlice{0%,100%{opacity:0;transform:translate(0,0);clip-path:inset(46% 0 50% 0)}42.1%{opacity:0}42.3%{opacity:1;transform:translate(22px,0);clip-path:inset(46% 0 48% 0)}42.6%{opacity:1;transform:translate(-18px,0);clip-path:inset(62% 0 34% 0)}43%{opacity:1;transform:translate(14px,0);clip-path:inset(24% 0 72% 0)}43.4%{opacity:0}71.2%{opacity:0}71.4%{opacity:1;transform:translate(-20px,0);clip-path:inset(55% 0 41% 0)}71.8%{opacity:0}}
 @keyframes hzGlitchFlash{0%,100%{opacity:0}42.2%{opacity:0}42.3%{opacity:.35}42.5%{opacity:0}71.3%{opacity:0}71.4%{opacity:.25}71.6%{opacity:0}}
 @keyframes hzMarquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes hzPlayerMarquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 1.5em))}}
+@keyframes hzWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes hzCoverIn{from{opacity:0;filter:blur(8px) grayscale(.4) brightness(.7)}to{opacity:1;filter:blur(0) grayscale(.4) brightness(.7)}}
+@keyframes hzCoverOut{from{opacity:1;filter:blur(0) grayscale(.4) brightness(.7)}to{opacity:0;filter:blur(8px) grayscale(.4) brightness(.7)}}
 @keyframes hzDrift{0%{transform:translate3d(-5%,0,0)}50%{transform:translate3d(5%,-3%,0)}100%{transform:translate3d(-5%,0,0)}}
 @keyframes hzFlicker{0%{opacity:0}5%{opacity:.85}7%{opacity:.05}11%{opacity:.6}13%{opacity:.12}19%{opacity:1}23%{opacity:.3}27%{opacity:1}33%{opacity:.65}36%{opacity:1}100%{opacity:1}}
 @keyframes hzScan{from{transform:translateY(-140%)}to{transform:translateY(300%)}}
@@ -104,7 +108,7 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
           </sc-for>
         </div>
         <div style="position:absolute;left:clamp(20px,18vw,260px);right:clamp(20px,8vw,120px);top:50%;transform:translate({{ listX }},-52%);transition:transform .9s cubic-bezier(.16,1,.3,1)">
-          <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;opacity:.6;margin-bottom:3vh"><span>ROSTER</span><span>REV. 2026</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;opacity:.6;margin-bottom:3vh;white-space:nowrap"><span>ROSTER</span><span>REV. 2026</span></div>
           <sc-for list="{{ rows }}" as="row" hint-placeholder-count="4">
             <div role="button" tabIndex="0" aria-label="{{ row.aria }}" onPointerEnter="{{ row.onEnter }}" onPointerMove="{{ row.onMove }}" onPointerLeave="{{ row.onLeave }}" onPointerDown="{{ row.onDown }}" onPointerUp="{{ row.onUp }}" onPointerCancel="{{ row.onLeave }}" onClick="{{ row.onClick }}" onKeyDown="{{ row.onKey }}" onContextMenu="{{ preventDefault }}" style="display:grid;grid-template-columns:3ch minmax(0,1fr) auto;gap:clamp(12px,2vw,32px);align-items:baseline;padding:clamp(10px,2.2vh,24px) 0;border-bottom:1px solid rgba(232,230,225,.09);opacity:{{ row.opacity }};transform:translateY({{ row.y }});transition:opacity .8s cubic-bezier(.16,1,.3,1) {{ row.delay }},transform .9s cubic-bezier(.16,1,.3,1) {{ row.delay }};cursor:{{ rowCursor }};user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;outline:none">
               <span style="font-size:10px;letter-spacing:.14em;opacity:.5">{{ row.code }}</span>
@@ -116,7 +120,38 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
         <div style="position:absolute;right:clamp(14px,3vw,48px);bottom:5vh;font-size:10px;letter-spacing:.14em;opacity:.4;transform:rotate(-3deg)">asia side</div>
       </section>
 
-      <section ref="{{ sec2 }}" data-screen-label="03 About" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z2 }});overflow:hidden;will-change:opacity,filter">
+      <section ref="{{ sec2 }}" data-screen-label="03 Works" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z2 }});overflow:hidden;will-change:opacity,filter">
+        <div style="position:absolute;left:clamp(16px,14vw,220px);right:clamp(16px,8vw,120px);top:50%;transform:translate({{ worksX }},-50%);opacity:{{ worksListOp }};transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .5s cubic-bezier(.16,1,.3,1)">
+          <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;opacity:.6;white-space:nowrap"><span>WORKS</span><span>REV. 2026</span></div>
+          <div style="font-size:clamp(11px,.9vw,12px);opacity:.6;margin:10px 0 clamp(14px,3vh,28px);letter-spacing:.02em">the ones people kept coming back to. uploads only, no reposts.</div>
+          <sc-for list="{{ topRows }}" as="t" hint-placeholder-count="4">
+            <div data-code="{{ t.code }}" onPointerEnter="{{ t.onEnter }}" onPointerLeave="{{ t.onLeave }}" style="display:grid;grid-template-columns:{{ rowCols }};gap:clamp(10px,1.4vw,22px);align-items:center;padding:clamp(9px,1.6vh,16px) 0;border-bottom:1px solid rgba(232,230,225,.09);opacity:{{ t.op }};transform:translate({{ t.offX }},{{ t.y }});transition:opacity .7s cubic-bezier(.16,1,.3,1) {{ t.delay }},transform .7s cubic-bezier(.16,1,.3,1) {{ t.delay }};cursor:{{ rowCursor }}">
+              <span style="font-size:10px;letter-spacing:.14em;opacity:.5;display:{{ codeDisplay }};white-space:nowrap">{{ t.code }}</span>
+              <div data-cover="1" style="width:clamp(40px,3.4vw,48px);aspect-ratio:1;position:relative;overflow:hidden;background:#0b0d11;border:1px solid rgba(232,230,225,.1)">
+                <div style="position:absolute;inset:0;background-image:{{ t.cover }};background-size:cover;background-position:center;filter:grayscale(.4) contrast(1.05) brightness(.7)"></div>
+                <div style="position:absolute;inset:0;background-image:url('assets/grain.png');background-size:128px 128px;opacity:.18"></div>
+              </div>
+              <div style="min-width:0">
+                <div style="font-size:clamp(13px,1.05vw,15px);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ t.titleColor }};transition:color .4s">{{ t.title }}</div>
+                <div style="font-size:10px;letter-spacing:.14em;opacity:.55;margin-top:4px;white-space:nowrap">{{ t.sub }}</div>
+              </div>
+              <div style="display:{{ badgesDisplay }};gap:4px">
+                <sc-for list="{{ t.badges }}" as="b" hint-placeholder-count="1"><span style="font-size:9px;letter-spacing:.12em;border:1px solid rgba(232,230,225,.3);padding:3px 4px 2px;line-height:1;opacity:.75">{{ b }}</span></sc-for>
+              </div>
+              <span style="font-size:11px;letter-spacing:.08em;opacity:.6;display:{{ playsDisplay }};font-variant-numeric:tabular-nums">{{ t.plays }}</span>
+              <span style="font-size:11px;letter-spacing:.08em;opacity:.6;font-variant-numeric:tabular-nums">{{ t.duration }}</span>
+              <sc-if value="{{ t.canPlay }}" hint-placeholder-val="{{ true }}"><button aria-label="{{ t.playAria }}" onClick="{{ t.onPlay }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:12px;color:{{ t.playColor }};transition:color .4s;justify-self:end" style-hover="color:#fff">{{ t.playGlyph }}</button></sc-if>
+              <sc-if value="{{ t.noPreview }}" hint-placeholder-val="{{ false }}"><a href="{{ t.spLink }}" target="_blank" rel="noreferrer" style="font-size:10px;letter-spacing:.12em;white-space:nowrap;min-height:44px;display:flex;align-items:center;justify-content:flex-end;opacity:.6;color:#E8E6E1;cursor:{{ rowCursor }}">{{ t.npLabel }}</a></sc-if>
+            </div>
+          </sc-for>
+          <div style="display:flex;justify-content:flex-end;margin-top:clamp(16px,3vh,32px)">
+            <button onClick="{{ openWorks }}" style="all:unset;font:inherit;border:1px solid rgba(232,230,225,.35);padding:0 16px;font-size:11px;letter-spacing:.14em;color:#E8E6E1;min-height:44px;display:inline-flex;align-items:center;box-sizing:border-box;cursor:{{ rowCursor }};transition:background .45s,color .45s,border-color .45s" style-hover="background:linear-gradient(180deg,#fff 0%,#E6ECF3 20%,#98A5B4 45%,#F5F8FB 52%,#6C7887 62%,#C4CDD8 100%);color:#050505;border-color:transparent">VIEW ALL ↗</button>
+          </div>
+        </div>
+        <div style="position:absolute;left:clamp(14px,3vw,48px);bottom:5vh;font-size:10px;letter-spacing:.14em;opacity:.4;transform:rotate(2deg);white-space:nowrap">HZ-W · 23 uploads</div>
+      </section>
+
+      <section ref="{{ sec3 }}" data-screen-label="04 About" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z3 }});overflow:hidden;will-change:opacity,filter">
         <div style="position:absolute;left:-6vw;right:-6vw;top:36%;transform:translateY(-50%) rotate(-2.5deg);overflow:hidden;white-space:nowrap;font-family:'League Gothic',Impact,sans-serif;font-size:clamp(88px,24vh,27vw);line-height:.9;letter-spacing:-.005em;user-select:none">
           <div style="position:relative">
             <div style="position:absolute;left:4px;top:5px;right:0;color:#12161c"><div style="display:flex;width:max-content;animation:hzMarquee 56s linear infinite"><span>ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span><span>ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — ONLY ONE TELL THE TRUTH — </span></div></div>
@@ -132,7 +167,7 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
         <div style="position:absolute;right:clamp(16px,9vw,140px);top:68%;transform:rotate(-7deg);border:1px solid rgba(232,230,225,.5);padding:9px 13px;font-size:11px;letter-spacing:.22em;opacity:{{ mOpStamp }};transition:opacity .9s cubic-bezier(.16,1,.3,1) 420ms">EST. 2026</div>
       </section>
 
-      <section ref="{{ sec3 }}" data-screen-label="04 Contact" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z3 }});overflow:hidden;will-change:opacity,filter">
+      <section ref="{{ sec4 }}" data-screen-label="05 Contact" style="position:{{ secPos }};inset:0;min-height:100vh;transform:translateZ({{ z4 }});overflow:hidden;will-change:opacity,filter">
         <div style="position:absolute;left:clamp(20px,12vw,200px);right:clamp(20px,6vw,90px);bottom:22vh;display:flex;flex-direction:column;gap:2.2vh">
           <div style="font-size:10px;letter-spacing:.16em;opacity:.6">CONTACT</div>
           <a href="mailto:contact@hazedivision.asia" style="font-size:clamp(15px,1.6vw,24px);letter-spacing:.02em;line-height:1.45;width:max-content;max-width:100%;border-bottom:1px solid rgba(232,230,225,.25);padding-bottom:2px;opacity:{{ cOp }};transform:translateY({{ cY }});transition:opacity .9s cubic-bezier(.16,1,.3,1) 0ms,transform .9s cubic-bezier(.16,1,.3,1) 0ms,color .3s">booking / press → contact@hazedivision.asia</a>
@@ -155,12 +190,13 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
   <div ref="{{ endRef }}" style="position:fixed;left:0;right:0;bottom:6vh;display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;pointer-events:none;z-index:16;font-size:10px;letter-spacing:.22em"><img src="assets/haze-emblem.svg" alt="" style="height:22px;width:auto"><span>hazedivision.asia</span></div>
   <div ref="{{ veilRef }}" style="position:fixed;inset:0;pointer-events:none;z-index:14;opacity:0;background:radial-gradient(ellipse 80% 70% at 50% 45%,rgba(120,134,150,.42),rgba(5,5,5,.6) 78%)"></div>
 
-  <div style="position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:clamp(14px,2.2vh,22px) clamp(16px,2.4vw,36px);font-size:10px;letter-spacing:.16em;z-index:20">
-    <a href="#top" onClick="{{ goHome }}" style="letter-spacing:.1em;padding:10px 0;min-height:44px;display:flex;align-items:center;gap:12px"><img src="assets/haze-emblem.svg" alt="" style="height:12px;width:auto;opacity:.9">hazedivision.asia</a>
-    <div style="display:flex;gap:10px;align-items:center;min-height:44px">
+  <div style="position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:clamp(14px,2.2vh,22px) clamp(14px,2.4vw,36px);font-size:10px;letter-spacing:.16em;z-index:20">
+    <a href="#top" onClick="{{ goHome }}" aria-label="hazedivision.asia" style="letter-spacing:.1em;padding:10px 0;min-height:44px;display:flex;align-items:center;gap:12px;white-space:nowrap"><img src="assets/haze-emblem.svg" alt="" style="height:12px;width:auto;opacity:.9"><span style="display:{{ brandDisplay }}">hazedivision.asia</span></a>
+    <div style="display:flex;gap:clamp(6px,.7vw,10px);align-items:center;min-height:44px;white-space:nowrap;font-size:{{ navSize }};letter-spacing:{{ navTrack }}">
       <a href="#roster" onClick="{{ goRoster }}" style="opacity:{{ nav1 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">ROSTER</a><span style="opacity:.3">/</span>
-      <a href="#about" onClick="{{ goAbout }}" style="opacity:{{ nav2 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">ABOUT</a><span style="opacity:.3">/</span>
-      <a href="#contact" onClick="{{ goContact }}" style="opacity:{{ nav3 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">CONTACT</a>
+      <a href="#works" onClick="{{ goWorks }}" style="opacity:{{ nav2 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">WORKS</a><span style="opacity:.3">/</span>
+      <a href="#about" onClick="{{ goAbout }}" style="opacity:{{ nav3 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">ABOUT</a><span style="opacity:.3">/</span>
+      <a href="#contact" onClick="{{ goContact }}" style="opacity:{{ nav4 }};transition:opacity .5s;padding:10px 0" style-hover="opacity:1">CONTACT</a>
     </div>
   </div>
   <div style="position:fixed;left:52%;bottom:3vh;transform:translateX(-50%);font-size:10px;letter-spacing:.24em;z-index:20;visibility:{{ cueVis }};animation:hzPulse 2.4s ease-in-out infinite;pointer-events:none;white-space:nowrap">SCROLL ↓</div>
@@ -177,7 +213,7 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
         <span style="opacity:.5;white-space:nowrap">{{ panelArtist.code }}</span>
       </div>
       <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="width:36px;height:2px;background:rgba(232,230,225,.3);margin:-4px auto 10px"></div></sc-if>
-      <div style="padding:0 clamp(18px,2.4vw,34px) 44px;display:flex;flex-direction:column;gap:22px">
+      <div style="padding:0 clamp(18px,2.4vw,34px) {{ listPadB }};display:flex;flex-direction:column;gap:22px">
         <div style="position:relative;aspect-ratio:4/5;max-height:46vh;background:#0b0d11;overflow:hidden;border:1px solid rgba(232,230,225,.1)">
           <sc-if value="{{ panelArtist.hasPhoto }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="{{ panelArtist.name }}" style="position:absolute;inset:0;background-image:{{ panelArtist.bg }};background-size:cover;background-position:center;filter:grayscale(.25) contrast(1.06)"></div></sc-if>
           <sc-if value="{{ panelArtist.noPhoto }}" hint-placeholder-val="{{ false }}">
@@ -195,6 +231,88 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
           <sc-for list="{{ panelArtist.links }}" as="l" hint-placeholder-count="3">
             <a href="{{ l.href }}" target="_blank" rel="noreferrer" style="border:1px solid rgba(232,230,225,.35);padding:0 16px;font-size:11px;letter-spacing:.14em;color:#E8E6E1;min-height:44px;display:inline-flex;align-items:center;box-sizing:border-box;transition:background .45s,color .45s,border-color .45s" style-hover="background:linear-gradient(180deg,#fff 0%,#E6ECF3 20%,#98A5B4 45%,#F5F8FB 52%,#6C7887 62%,#C4CDD8 100%);color:#050505;border-color:transparent">{{ l.label }} ↗</a>
           </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ worksMounted }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeWorks }}" aria-hidden="true" style="position:fixed;inset:0;z-index:50;cursor:{{ rowCursor }};display:{{ worksBackdropDisplay }};background:rgba(5,5,5,.2)"></div>
+    <div role="dialog" aria-modal="true" aria-label="all works" onTouchStart="{{ onWorksTouchStart }}" onTouchMove="{{ onWorksTouchMove }}" style="position:fixed;top:0;right:0;bottom:0;width:{{ worksPanelWidth }};max-width:100vw;background:#070809;border-left:1px solid rgba(232,230,225,.12);transform:{{ worksTransform }};transition:transform .9s cubic-bezier(.16,1,.3,1);z-index:51;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden">
+      <div style="display:flex;flex-direction:{{ worksHeadDir }};justify-content:space-between;align-items:center;gap:12px;padding:{{ worksHeadPad }} clamp(18px,2.4vw,34px);font-size:10px;letter-spacing:.16em;border-bottom:1px solid {{ worksHeadBorder }};transition:padding .3s,border-color .3s;flex:none">
+        <button onClick="{{ closeWorks }}" style="all:unset;font:inherit;letter-spacing:.16em;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;opacity:.85;white-space:nowrap" style-hover="opacity:1;color:#fff">× CLOSE</button>
+        <div style="display:flex;gap:14px;align-items:baseline;white-space:nowrap"><span>WORKS — ALL</span><span style="opacity:.5">SORTED BY PLAYS</span></div>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="width:36px;height:2px;background:rgba(232,230,225,.3);margin:6px auto 0;flex:none"></div></sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:4px 28px;padding:10px clamp(18px,2.4vw,34px) 6px;font-size:10px;letter-spacing:.16em;flex:none">
+        <div style="display:flex;gap:18px">
+          <button onClick="{{ setAll }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fAllColor }};border-bottom:1px solid {{ fAllLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">ALL</button>
+          <button onClick="{{ setSkesh }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fSkeshColor }};border-bottom:1px solid {{ fSkeshLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">SKESH</button>
+          <button onClick="{{ setNuzzi }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fNuzziColor }};border-bottom:1px solid {{ fNuzziLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">NUZZI</button>
+        </div>
+        <div style="display:flex;gap:18px">
+          <button onClick="{{ toggleSC }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fSCColor }};border-bottom:1px solid {{ fSCLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">SC</button>
+          <button onClick="{{ toggleSP }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fSPColor }};border-bottom:1px solid {{ fSPLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">SP</button>
+        </div>
+      </div>
+      <div ref="{{ worksListRef }}" onScroll="{{ onWorksScroll }}" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:0 clamp(18px,2.4vw,34px) {{ listPadB }}">
+        <sc-for list="{{ allRows }}" as="t" hint-placeholder-count="6">
+          <div data-code="{{ t.code }}" onPointerEnter="{{ t.onEnter }}" onPointerLeave="{{ t.onLeave }}" style="display:grid;grid-template-columns:{{ rowCols }};gap:clamp(10px,1.4vw,22px);align-items:center;padding:clamp(9px,1.4vh,14px) 0;border-bottom:1px solid rgba(232,230,225,.09);opacity:{{ t.op }};transition:opacity .6s cubic-bezier(.16,1,.3,1) {{ t.delay }};cursor:{{ rowCursor }}">
+            <span style="font-size:10px;letter-spacing:.14em;opacity:.5;display:{{ codeDisplay }};white-space:nowrap">{{ t.code }}</span>
+            <div data-cover="1" style="width:clamp(40px,3.4vw,48px);aspect-ratio:1;position:relative;overflow:hidden;background:#0b0d11;border:1px solid rgba(232,230,225,.1)">
+              <div style="position:absolute;inset:0;background-image:{{ t.cover }};background-size:cover;background-position:center;filter:grayscale(.4) contrast(1.05) brightness(.7)"></div>
+              <div style="position:absolute;inset:0;background-image:url('assets/grain.png');background-size:128px 128px;opacity:.18"></div>
+            </div>
+            <div style="min-width:0">
+              <div style="font-size:clamp(13px,1.05vw,15px);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ t.titleColor }};transition:color .4s">{{ t.title }}</div>
+              <div style="font-size:10px;letter-spacing:.14em;opacity:.55;margin-top:4px;white-space:nowrap">{{ t.sub }}</div>
+            </div>
+            <div style="display:{{ badgesDisplay }};gap:4px">
+              <sc-for list="{{ t.badges }}" as="b" hint-placeholder-count="1"><span style="font-size:9px;letter-spacing:.12em;border:1px solid rgba(232,230,225,.3);padding:3px 4px 2px;line-height:1;opacity:.75">{{ b }}</span></sc-for>
+            </div>
+            <span style="font-size:11px;letter-spacing:.08em;opacity:.6;display:{{ playsDisplay }};font-variant-numeric:tabular-nums">{{ t.plays }}</span>
+            <span style="font-size:11px;letter-spacing:.08em;opacity:.6;font-variant-numeric:tabular-nums">{{ t.duration }}</span>
+            <sc-if value="{{ t.canPlay }}" hint-placeholder-val="{{ true }}"><button aria-label="{{ t.playAria }}" onClick="{{ t.onPlay }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:12px;color:{{ t.playColor }};transition:color .4s;justify-self:end" style-hover="color:#fff">{{ t.playGlyph }}</button></sc-if>
+            <sc-if value="{{ t.noPreview }}" hint-placeholder-val="{{ false }}"><a href="{{ t.spLink }}" target="_blank" rel="noreferrer" style="font-size:10px;letter-spacing:.12em;white-space:nowrap;min-height:44px;display:flex;align-items:center;justify-content:flex-end;opacity:.6;color:#E8E6E1;cursor:{{ rowCursor }}">{{ t.npLabel }}</a></sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ worksEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:40px 0;font-size:12px;opacity:.6">nothing here yet.</div></sc-if>
+      </div>
+      <div style="padding:12px clamp(18px,2.4vw,34px) calc(12px + env(safe-area-inset-bottom));font-size:10px;letter-spacing:.06em;opacity:.5;border-top:1px solid rgba(232,230,225,.1);flex:none;margin-bottom:{{ worksFootMb }}">sorted by plays, updated every day.</div>
+    </div>
+  </sc-if>
+
+  <div ref="{{ ghostRef }}" aria-hidden="true" style="position:fixed;left:0;top:0;width:48px;height:48px;opacity:0;pointer-events:none;z-index:57;background-size:cover;background-position:center;filter:grayscale(.4) contrast(1.05) brightness(.7);border:1px solid rgba(232,230,225,.12);box-sizing:border-box"></div>
+
+  <sc-if value="{{ playerMounted }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ playerRef }}" role="region" aria-label="player" style="position:fixed;left:0;right:0;bottom:0;z-index:56;background:linear-gradient(180deg,#0c0e12 0%,#07080a 100%);border-top:1px solid #C9D2DC;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.9);padding:0 clamp(12px,2.4vw,36px) env(safe-area-inset-bottom);transform:translateY({{ playerY }});opacity:{{ playerOp }};transition:transform {{ playerDur }} {{ playerEase }},opacity .4s">
+      <div style="height:{{ playerH }};display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:clamp(12px,1.6vw,24px)">
+        <div ref="{{ playerCoverRef }}" style="width:40px;height:40px;position:relative;overflow:hidden;background:#0b0d11;border:1px solid rgba(232,230,225,.12);box-sizing:border-box;opacity:{{ coverOp }}">
+          <sc-if value="{{ hasPrevCover }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background-image:{{ prevCover }};background-size:cover;background-position:center;animation:hzCoverOut .5s cubic-bezier(.16,1,.3,1) both"></div></sc-if>
+          <div style="position:absolute;inset:0;background-image:{{ pCover }};background-size:cover;background-position:center;filter:grayscale(.4) brightness(.7);animation:{{ coverInAnim }}"></div>
+          <div ref="{{ coverGrainRef }}" style="position:absolute;inset:0;background-image:url('assets/grain.png');background-size:128px 128px;opacity:.24"></div>
+        </div>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:8px">
+          <div ref="{{ titleBoxRef }}" style="display:flex;align-items:center;gap:10px;min-width:0">
+            <div data-titlebox="1" style="min-width:0;overflow:hidden;white-space:nowrap;flex:0 1 auto;font-size:clamp(12px,.95vw,13px);letter-spacing:.04em">
+              <sc-if value="{{ pError }}" hint-placeholder-val="{{ false }}"><a href="{{ pLink }}" target="_blank" rel="noreferrer" style="opacity:.85">couldn't load. try the link ↗</a></sc-if>
+              <sc-if value="{{ pNormalA }}" hint-placeholder-val="{{ false }}"><div style="display:inline-flex;gap:3em;animation:{{ titleAnim }}"><span data-line="1">{{ pLine }}</span><sc-if value="{{ titleOverflow }}" hint-placeholder-val="{{ false }}"><span>{{ pLine }}</span></sc-if></div></sc-if>
+              <sc-if value="{{ pNormalB }}" hint-placeholder-val="{{ false }}"><div style="display:inline-flex;gap:3em;animation:{{ titleAnim }}"><span data-line="1">{{ pLine }}</span><sc-if value="{{ titleOverflow }}" hint-placeholder-val="{{ false }}"><span>{{ pLine }}</span></sc-if></div></sc-if>
+            </div>
+            <span style="font-size:9px;letter-spacing:.12em;border:1px solid rgba(232,230,225,.3);padding:3px 4px 2px;line-height:1;opacity:.7;flex:none">{{ pBadge }}</span>
+          </div>
+          <div onPointerEnter="{{ onProgEnter }}" onPointerLeave="{{ onProgLeave }}" onClick="{{ seek }}" style="position:relative;height:14px;margin:-7px 0;cursor:{{ rowCursor }}">
+            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(232,230,225,.18);animation:{{ progAnim }}"></div>
+            <div style="position:absolute;left:0;top:50%;height:1px;width:{{ progressPct }};background:#C9D2DC;transition:width .25s linear"></div>
+            <div style="position:absolute;left:{{ progressPct }};top:50%;width:5px;height:5px;margin:-2px 0 0 -2px;border-radius:50%;background:#E8E6E1;opacity:{{ thumbOp }};transition:opacity .3s,left .25s linear"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:clamp(2px,.6vw,10px)">
+          <span style="font-size:11px;letter-spacing:.14em;opacity:.75;white-space:nowrap;font-variant-numeric:tabular-nums;margin-right:clamp(4px,.8vw,12px)">{{ timerText }}</span>
+          <button aria-label="previous" onClick="{{ prevTrack }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};display:{{ skipDisplay }};align-items:center;justify-content:center;min-width:40px;height:44px;font-size:10px;letter-spacing:-.1em;opacity:.7" style-hover="opacity:1;color:#fff">◀◀</button>
+          <button aria-label="{{ playPauseAria }}" onClick="{{ toggle }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};display:flex;align-items:center;justify-content:center;min-width:44px;height:44px;font-size:13px;color:#C9D2DC" style-hover="color:#fff">{{ playPauseGlyph }}</button>
+          <button aria-label="next" onClick="{{ nextTrack }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};display:{{ skipDisplay }};align-items:center;justify-content:center;min-width:40px;height:44px;font-size:10px;letter-spacing:-.1em;opacity:.7" style-hover="opacity:1;color:#fff">▶▶</button>
+          <button aria-label="dismiss player" onClick="{{ dismissPlayer }}" style="all:unset;font:inherit;cursor:{{ rowCursor }};display:flex;align-items:center;justify-content:center;min-width:44px;height:44px;font-size:14px;opacity:.55;margin-left:clamp(0px,.6vw,8px)" style-hover="opacity:1;color:#fff">×</button>
         </div>
       </div>
     </div>
@@ -219,25 +337,53 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
       <div style="margin-top:5vh;font-size:clamp(12px,1.3vw,16px);letter-spacing:.26em;line-height:1.9;text-align:center;height:calc(1.9em * 5)">
         <div>{{ typed0 }}</div><div>{{ typed1 }}</div><div>{{ typed2 }}</div><div>{{ typed3 }}</div><div>{{ typed4 }}</div>
       </div>
-      <div style="position:absolute;left:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.2em;opacity:.7">LOADING {{ pctText }}%</div>
+      <div style="position:absolute;left:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.2em;opacity:.7;white-space:nowrap">LOADING {{ pctText }}%</div>
       <div style="position:absolute;right:clamp(16px,2.4vw,36px);bottom:3vh;font-size:10px;letter-spacing:.16em;opacity:.4">hazedivision.asia</div>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;full&quot;,&quot;options&quot;:[&quot;full&quot;,&quot;reduced&quot;],&quot;tsType&quot;:&quot;'full' | 'reduced'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showLoading&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.1,&quot;min&quot;:0,&quot;max&quot;:0.2,&quot;step&quot;:0.01,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Texture&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Handoff&quot;}}">
-const D = 1400;
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;full&quot;,&quot;options&quot;:[&quot;full&quot;,&quot;reduced&quot;],&quot;tsType&quot;:&quot;'full' | 'reduced'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showLoading&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.1,&quot;min&quot;:0,&quot;max&quot;:0.2,&quot;step&quot;:0.01,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Texture&quot;},&quot;playerState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;auto&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;tsType&quot;:&quot;'auto' | 'loading' | 'error'&quot;,&quot;section&quot;:&quot;Player&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Handoff&quot;}}">
+const D = 1400, STOPS = 5, EASE = 'cubic-bezier(.16,1,.3,1)', CHROME = '#C9D2DC';
 const ARTISTS = [
   { id: 'skesh', name: 'SKESH', role: 'FOUNDER', code: 'HZ-001', photo: 'https://i1.sndcdn.com/avatars-jyryWKRy4MtZhM3K-aRFJEw-t500x500.jpg', photoFallback: 'https://i1.sndcdn.com/avatars-jyryWKRy4MtZhM3K-aRFJEw-t200x200.jpg', bio: 'founder. makes the beats and most of the noise. based somewhere in asia. only one tell the truth.', links: [{ label: 'SOUNDCLOUD', href: 'https://soundcloud.com/skeshbtw' }, { label: 'SPOTIFY', href: 'https://open.spotify.com/artist/42ZKXyAY5TLpkLY2lncU9y' }, { label: 'INSTAGRAM', href: 'https://www.instagram.com/hazedivision/' }] },
   { id: 'nuzzi', name: 'NUZZI', role: 'ARTIST', code: 'HZ-002', photo: 'https://i1.sndcdn.com/avatars-VIMw752zTn4R8tnJ-MMG35Q-t500x500.jpg', photoFallback: 'https://i1.sndcdn.com/avatars-VIMw752zTn4R8tnJ-MMG35Q-t200x200.jpg', bio: "nuzzi. haze division. hums the melodies you can't get out of your head. more coming.", links: [{ label: 'SOUNDCLOUD', href: 'https://soundcloud.com/1nuji' }, { label: 'SPOTIFY', href: 'https://open.spotify.com/artist/0Lsj6iyj2QAJA6X2rOCLy7' }, { label: 'INSTAGRAM', href: 'https://www.instagram.com/hazedivision/' }] },
 ];
+// placeholder data — the build fetches uploads from SoundCloud (user tracks) + Spotify (artist top tracks) and sorts by plays. preview:false = Spotify-only with no 30s preview.
+const TRACKS = [
+  ['HZ-W01', 'cold room', 'skesh', ['SC', 'SP'], 3412, 167, 2026, true],
+  ['HZ-W02', 'hum', 'nuzzi', ['SC', 'SP'], 2980, 185, 2026, true],
+  ['HZ-W03', '2am tell', 'skesh', ['SC'], 2211, 151, 2026, true],
+  ['HZ-W04', "can't get out", 'nuzzi', ['SP'], 1840, 178, 2026, false],
+  ['HZ-W05', 'haze pt.1', 'skesh', ['SC', 'SP'], 1633, 202, 2025, true],
+  ['HZ-W06', 'late text', 'nuzzi', ['SC'], 1402, 139, 2026, true],
+  ['HZ-W07', 'no signal', 'skesh', ['SC'], 1188, 164, 2025, true],
+  ['HZ-W08', 'blue hour', 'nuzzi', ['SC', 'SP'], 1071, 191, 2026, true],
+  ['HZ-W09', 'static', 'skesh', ['SP'], 964, 129, 2025, false],
+  ['HZ-W10', 'nothing new', 'nuzzi', ['SC'], 902, 156, 2025, true],
+  ['HZ-W11', 'lowlight', 'skesh', ['SC', 'SP'], 855, 181, 2025, true],
+  ['HZ-W12', 'quiet quiet', 'nuzzi', ['SC'], 731, 172, 2026, true],
+  ['HZ-W13', 'tell the truth (demo)', 'skesh', ['SC'], 688, 118, 2026, true],
+  ['HZ-W14', 'stay cold', 'nuzzi', ['SP'], 610, 161, 2025, true],
+  ['HZ-W15', 'fog machine', 'skesh', ['SC'], 577, 194, 2025, true],
+  ['HZ-W16', 'window seat', 'skesh', ['SC', 'SP'], 512, 147, 2024, true],
+  ['HZ-W17', 'melodies', 'nuzzi', ['SC'], 466, 135, 2025, true],
+  ['HZ-W18', "don't call", 'skesh', ['SC'], 421, 170, 2024, true],
+  ['HZ-W19', 'bad habit', 'nuzzi', ['SC', 'SP'], 388, 187, 2025, true],
+  ['HZ-W20', 'asia side', 'skesh', ['SC'], 340, 142, 2024, true],
+  ['HZ-W21', 'loop 04', 'skesh', ['SC'], 291, 106, 2024, true],
+  ['HZ-W22', 'half awake', 'nuzzi', ['SC'], 244, 153, 2024, true],
+  ['HZ-W23', 'rev. 2026', 'skesh', ['SC'], 168, 124, 2026, true],
+].map(([code, title, artist, platforms, plays, dur, year, preview]) => ({ code, title, artist, platforms, plays, dur, year, preview }));
+const fmtPlays = n => n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(n);
+const fmtDur = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const ANNO = [
-  ['CAM 01 · z 0 · scrub: scrollY/vh → camZ, lerp .085', 'logo: rotateY 360°/40s linear ∞ · float ±1.6% 9s · tilt rx -6..6 ry -9..9 → cursor, lerp .06', 'slogan: opacity 0→1 + y 8→0 · 900ms expo.out · 80ms stagger', 'cue: opacity .2↔.9 · 2.4s ease-in-out ∞'],
-  ['CAM 02 · z -1400 · fog: next stop opacity 1-t·.8, blur t·12px', 'reveal: blur 24→6px · opacity 0→.9 · 900ms expo.out · grain stays on top', 'other rows: opacity 1→.4 · 600ms · role tag opacity 0→.7 · 500ms', 'panel: translateX 100%→0 (mobile: translateY) · 900ms expo.out · backdrop blur 6px 800ms'],
-  ['CAM 03 · z -2800', 'marquee: translateX 0→-50% · 56s linear ∞ · band rotate -2.5°', 'manifesto: opacity + y 8→0 · 900ms expo.out · 90ms stagger', 'stamp: opacity 0→1 · 900ms · 420ms delay'],
-  ['CAM 04 · z -4200', 'contact lines: opacity + y 8→0 · 900ms · 90ms stagger', 'fade: stage → #050505 over final half stop (scrubbed), end lockup opacity → .7', 'grain: 8% · random offset @ 12fps · scanlines 1/3px @ 50%'],
+  ['CAM 01 · z 0 · scrub: scrollY/vh → camZ, lerp .16', 'logo: static pose rx 10 ry -22 · glitch 2× per 7s, steps · tilt ±6/±10 → cursor', 'slogan: opacity 0→1 + y 10→0 · 900ms expo.out · 80ms stagger', 'cue: opacity .2↔.9 · 2.4s ease-in-out ∞'],
+  ['CAM 02 · z -1400 · crossfade (1-t)^1.6 / 1-|d|/700 · veil sin(π·frac)^1.4', 'reveal: mask-size 12%→34×60% · opacity 0→.8 · blur 18→3 · 900ms expo.out', 'click: mask 440% · opacity 1 · blur 5 · 1.4s · list -13vw, bg -8vw', 'panel: translateX 100%→0 · 900ms expo.out'],
+  ['CAM 03 · z -2800 · WORKS', 'rows: opacity + y 8→0 · 700ms expo.out · 60ms stagger', 'VIEW ALL: list → +14vw / fade · panel translateX 100%→0 · 900ms · page dims 20%', 'row ▶: cover FLIP → dock · 800ms expo.out · row fades 300ms · swap: cover blur crossfade 500ms, title wipe 400ms'],
+  ['CAM 04 · z -4200', 'marquee: translateX 0→-50% · 56s linear ∞ · band rotate -2.5°', 'manifesto: opacity + y 8→0 · 900ms expo.out · 90ms stagger', 'stamp: opacity 0→.75 · 900ms · 420ms delay'],
+  ['CAM 05 · z -5600', 'contact lines: opacity + y 8→0 · 900ms · 90ms stagger', 'fade: stage → #050505 over final half stop (scrubbed), end lockup opacity → .7', 'grain: 8% · random offset @ 12fps · scanlines 1/3px @ 50%'],
 ];
-const EASE = 'cubic-bezier(.16,1,.3,1)';
 
 class Component extends DCLogic {
   constructor(props) {
@@ -245,11 +391,14 @@ class Component extends DCLogic {
     const q = new URLSearchParams(window.location.search);
     this.q = q;
     this.frozen = q.get('frozen') === '1';
-    this.stopQ = q.has('stop') ? Math.max(0, Math.min(3, parseFloat(q.get('stop')) || 0)) : null;
+    this.stopQ = q.has('stop') ? Math.max(0, Math.min(STOPS - 1, parseFloat(q.get('stop')) || 0)) : null;
     const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
     const prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const loadingQ = q.get('loading') === '1';
     const showLoading = loadingQ || ((props.showLoading ?? true) && this.stopQ === null && !q.has('motion') && !this.frozen && !prm);
+    const playQ = TRACKS.some(t => t.code === q.get('play')) ? q.get('play') : null;
+    this.forced = ['loading', 'error'].includes(q.get('player')) ? q.get('player') : (props.playerState && props.playerState !== 'auto' ? props.playerState : null);
+    const wp = (q.get('wp') || '').toUpperCase();
     this.state = {
       w: window.innerWidth, h: window.innerHeight, fine, prm,
       loading: showLoading, loadingOp: 1,
@@ -259,22 +408,36 @@ class Component extends DCLogic {
       panel: ARTISTS.some(a => a.id === q.get('panel')) ? q.get('panel') : null, panelShown: ARTISTS.some(a => a.id === q.get('panel')),
       active: Math.round(this.stopQ || 0),
       has: {},
+      whover: TRACKS.some(t => t.code === q.get('whover')) ? q.get('whover') : null,
+      works: q.get('works') === '1', worksShown: q.get('works') === '1', worksScrolled: false,
+      wf: ['skesh', 'nuzzi'].includes(q.get('wf')) ? q.get('wf') : 'all',
+      wp: ['SC', 'SP'].includes(wp) ? wp : 'all',
+      player: playQ, playerShown: !!playQ,
+      pstate: playQ ? (this.forced || 'playing') : 'idle',
+      elapsed: playQ ? 47 : 0,
+      prevCover: null, titleSlot: 0, progHover: false, titleOverflow: false, fadeRow: null, coverHidden: false,
     };
-    this.r = { world: React.createRef(), secs: [0, 1, 2, 3].map(() => React.createRef()), fade: React.createRef(), end: React.createRef(), grain: React.createRef(), cur: React.createRef(), curIn: React.createRef(), tilt: React.createRef(), spin: React.createRef(), veil: React.createRef() };
+    this.r = { world: React.createRef(), secs: Array.from({ length: STOPS }, () => React.createRef()), fade: React.createRef(), end: React.createRef(), grain: React.createRef(), cur: React.createRef(), curIn: React.createRef(), tilt: React.createRef(), spin: React.createRef(), veil: React.createRef(), ghost: React.createRef(), player: React.createRef(), pCover: React.createRef(), coverGrain: React.createRef(), titleBox: React.createRef(), worksList: React.createRef() };
     this.camZ = (this.stopQ || 0) * D; this.targetZ = this.camZ; this.fadeT = 0; this.fadeCur = 0;
     this.tx = 0; this.ty = 0; this.ctx = 0; this.cty = 0;
-    this.timers = []; this.holding = false;
+    this.timers = []; this.holding = false; this.playlist = null;
   }
   get motionMode() { return this.q.get('motion') || this.props.motion || 'full'; }
   get reduced() { return this.motionMode === 'reduced' || this.state.prm; }
   get isMobile() { return this.state.w < 640; }
   get locked() { return this.stopQ !== null || this.frozen; }
+  track(code) { return TRACKS.find(t => t.code === code) || null; }
+  artistOf(t) { return ARTISTS.find(a => a.id === t.artist); }
+  coverOf(t) { const a = this.artistOf(t); return `url('${this.state.has[a.id] || a.photo}')`; }
+  link(t, p) { const a = this.artistOf(t); return (a.links.find(l => l.label === (p === 'SP' ? 'SPOTIFY' : 'SOUNDCLOUD')) || a.links[0]).href; }
+  canDock(t) { return t.preview || t.platforms.includes('SC'); }
+  filtered() { const s = this.state; return TRACKS.filter(t => (s.wf === 'all' || t.artist === s.wf) && (s.wp === 'all' || t.platforms.includes(s.wp))); }
 
   componentDidMount() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     if (this.state.loading || this.stopQ !== null) window.scrollTo(0, 0);
     this.onResize = () => this.setState({ w: window.innerWidth, h: window.innerHeight });
-    this.onKey = e => { if (e.key === 'Escape' && this.state.panel) this.closePanel(); };
+    this.onKey = e => { if (e.key === 'Escape') { if (this.state.panel) this.closePanel(); else if (this.state.works) this.closeWorks(); } };
     this.onScroll = () => this.readScroll();
     window.addEventListener('resize', this.onResize);
     window.addEventListener('keydown', this.onKey);
@@ -295,22 +458,30 @@ class Component extends DCLogic {
       im.onerror = () => { if (im.src !== a.photoFallback) im.src = a.photoFallback; };
       im.src = a.photo;
     });
-    if (!this.frozen) this.grainTimer = setInterval(() => { const g = this.r.grain.current; if (g) g.style.backgroundPosition = `${Math.floor(Math.random() * 256)}px ${Math.floor(Math.random() * 256)}px`; }, 83);
+    if (!this.frozen) this.grainTimer = setInterval(() => {
+      const g = this.r.grain.current; if (g) g.style.backgroundPosition = `${Math.floor(Math.random() * 256)}px ${Math.floor(Math.random() * 256)}px`;
+      const cg = this.r.coverGrain.current; if (cg && this.state.pstate === 'playing') cg.style.backgroundPosition = `${Math.floor(Math.random() * 128)}px ${Math.floor(Math.random() * 128)}px`;
+    }, 83);
     if (this.state.loading && !this.frozen) this.runLoading();
+    if (this.state.player && !this.frozen && this.state.pstate === 'playing') this.startTick();
     this.updateLock();
+    this.measureTitle();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); window.removeEventListener('scroll', this.onScroll);
     if (this.onMove) window.removeEventListener('mousemove', this.onMove);
-    cancelAnimationFrame(this.raf); clearInterval(this.grainTimer); clearInterval(this.progTimer); clearTimeout(this.closeTimer); this.timers.forEach(clearTimeout);
+    cancelAnimationFrame(this.raf); clearInterval(this.grainTimer); clearInterval(this.progTimer); clearInterval(this.tick); clearTimeout(this.closeTimer); clearTimeout(this.closeWorksTimer); clearTimeout(this.loadTimer); this.timers.forEach(clearTimeout);
     document.documentElement.style.overflow = '';
   }
   componentDidUpdate(prevProps) {
     if (prevProps.grain !== this.props.grain) this.applyGrain();
     if (prevProps.motion !== this.props.motion) this.syncMode(false);
+    if (prevProps.playerState !== this.props.playerState) { this.forced = this.props.playerState && this.props.playerState !== 'auto' ? this.props.playerState : null; if (this.state.player) { this.setState({ pstate: 'loading' }); this.beginLoad(); } }
+    this.runFlip();
+    this.measureTitle();
   }
   applyGrain() { const g = this.r.grain.current; if (g) g.style.opacity = String(this.props.grain ?? 0.08); }
-  updateLock() { setTimeout(() => { document.documentElement.style.overflow = (this.locked && !this.reduced) || this.state.loading || this.state.panel ? 'hidden' : ''; }, 0); }
+  updateLock() { setTimeout(() => { document.documentElement.style.overflow = (this.locked && !this.reduced) || this.state.loading || this.state.panel || this.state.works ? 'hidden' : ''; }, 0); }
   syncMode(initial) {
     cancelAnimationFrame(this.raf);
     if (this.reduced) {
@@ -328,8 +499,8 @@ class Component extends DCLogic {
   readScroll() {
     if (this.stopQ !== null) return;
     const u = window.scrollY / Math.max(1, window.innerHeight);
-    this.targetZ = Math.max(0, Math.min(3, u)) * D;
-    this.fadeT = Math.max(0, Math.min(1, (u - 3) / 0.5));
+    this.targetZ = Math.max(0, Math.min(STOPS - 1, u)) * D;
+    this.fadeT = Math.max(0, Math.min(1, (u - (STOPS - 1)) / 0.5));
   }
   loop() {
     this.raf = requestAnimationFrame(() => this.loop());
@@ -342,30 +513,25 @@ class Component extends DCLogic {
   }
   applyCamera() {
     const active = Math.round(this.camZ / D);
-    if (this.state.panel && this.targetZ !== this.camZ) this.targetZ = this.camZ;
+    if ((this.state.panel || this.state.works) && this.targetZ !== this.camZ) this.targetZ = this.camZ;
     const world = this.r.world.current;
-    if (world) { world.style.transform = `translate3d(0,0,${this.camZ.toFixed(1)}px)`; }
     const stage = world && world.parentElement;
     if (stage) {
-      stage.style.perspective = 'none';
-      world.style.transform = 'none';
-      world.style.transformStyle = 'flat';
-      for (let i = 0; i < 4; i++) {
+      stage.style.perspective = 'none'; world.style.transform = 'none'; world.style.transformStyle = 'flat';
+      for (let i = 0; i < STOPS; i++) {
         const el = this.r.secs[i].current; if (!el) continue;
-        const dist = i * D - this.camZ;
-        const sc = 1100 / (1100 + dist);
+        const sc = 1100 / (1100 + (i * D - this.camZ));
         el.style.transform = Math.abs(sc - 1) < .002 ? 'none' : `scale(${Math.max(.05, sc).toFixed(4)})`;
       }
     }
     const frac = (this.camZ / D) % 1;
     if (this.r.veil.current) this.r.veil.current.style.opacity = (Math.pow(Math.sin(Math.PI * frac), 1.4) * .85).toFixed(3);
     const maxBlur = this.isMobile ? 6 : 10;
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < STOPS; i++) {
       const el = this.r.secs[i].current; if (!el) continue;
       const dist = i * D - this.camZ; let op, blur = 0;
       if (dist >= 0) { const t = dist / D; op = Math.pow(Math.max(0, 1 - t), 1.6); blur = Math.min(maxBlur, Math.max(0, t - .06) * 12); }
       else { const t = (-dist) / (D * .5); op = Math.max(0, 1 - t); blur = Math.min(maxBlur, t * 9); }
-
       el.style.opacity = op.toFixed(3);
       el.style.filter = blur > .3 ? `blur(${blur.toFixed(1)}px)` : 'none';
       el.style.visibility = op <= .005 ? 'hidden' : 'visible';
@@ -438,12 +604,152 @@ class Component extends DCLogic {
       onKey: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.openPanel(a.id); } },
     };
   }
+  // ---- works panel
+  openWorks() {
+    clearTimeout(this.closeWorksTimer);
+    this.openedWorksAt = performance.now();
+    this.setCursorScale(1);
+    this.setState({ works: true, worksShown: false, whover: null, worksScrolled: false });
+    this.updateLock();
+    this.timers.push(setTimeout(() => { if (this.state.works) this.setState({ worksShown: true }); }, 40));
+  }
+  closeWorks() {
+    if (!this.state.works) return;
+    if (performance.now() - (this.openedWorksAt || 0) < 400) return;
+    this.setCursorScale(1);
+    this.setState({ worksShown: false });
+    clearTimeout(this.closeWorksTimer);
+    this.closeWorksTimer = setTimeout(() => { this.setState({ works: false }); this.updateLock(); }, 900);
+  }
+  setFilter(patch) {
+    const list = this.r.worksList.current;
+    if (list && !this.reduced) { this.flipSnap = {}; list.querySelectorAll('[data-code]').forEach(el => { this.flipSnap[el.dataset.code] = el.getBoundingClientRect(); }); }
+    this.setState(patch);
+  }
+  runFlip() {
+    if (!this.flipSnap) return;
+    const snap = this.flipSnap; this.flipSnap = null;
+    const list = this.r.worksList.current; if (!list) return;
+    list.querySelectorAll('[data-code]').forEach(el => {
+      const was = snap[el.dataset.code]; const now = el.getBoundingClientRect();
+      if (was) {
+        const dy = was.top - now.top; if (Math.abs(dy) < 1) return;
+        el.style.transition = 'none'; el.style.transform = `translateY(${dy}px)`; el.getBoundingClientRect();
+        requestAnimationFrame(() => { el.style.transition = `transform .5s ${EASE}`; el.style.transform = ''; });
+      } else {
+        el.style.transition = 'none'; el.style.opacity = '0'; el.getBoundingClientRect();
+        requestAnimationFrame(() => { el.style.transition = 'opacity .5s'; el.style.opacity = ''; });
+      }
+    });
+    this.timers.push(setTimeout(() => list.querySelectorAll('[data-code]').forEach(el => { el.style.transition = ''; el.style.transform = ''; }), 560));
+  }
+  // ---- player
+  currentListCodes() { return (this.state.works ? this.filtered() : TRACKS.slice(0, 4)).map(t => t.code); }
+  play(code, e) {
+    const t = this.track(code); if (!t) return;
+    if (!this.canDock(t)) { window.open(this.link(t, 'SP'), '_blank', 'noopener'); return; }
+    this.playlist = this.currentListCodes();
+    if (this.state.player === code) { this.toggle(); return; }
+    const rowEl = e && e.currentTarget && e.currentTarget.closest('[data-code]');
+    const coverEl = rowEl && rowEl.querySelector('[data-cover]');
+    const from = coverEl ? coverEl.getBoundingClientRect() : null;
+    this.setCursorScale(1);
+    if (!this.state.player) {
+      const morph = !!from && !this.reduced;
+      this.setState({ player: code, playerShown: false, pstate: 'loading', elapsed: 0, fadeRow: code, coverHidden: morph, titleSlot: 0, prevCover: null, titleOverflow: false });
+      this.timers.push(setTimeout(() => { this.setState({ playerShown: true }); if (morph) this.runGhost(from, t); }, 30));
+      this.timers.push(setTimeout(() => this.setState({ fadeRow: null }), 300));
+    } else {
+      this.swapTo(code);
+    }
+    this.beginLoad();
+  }
+  swapTo(code) {
+    const cur = this.track(this.state.player);
+    this.setState(s => ({ prevCover: cur ? this.coverOf(cur) : null, player: code, pstate: 'loading', elapsed: 0, titleSlot: 1 - s.titleSlot, titleOverflow: false }));
+    this.timers.push(setTimeout(() => this.setState({ prevCover: null }), 520));
+  }
+  runGhost(from, t) {
+    const g = this.r.ghost.current, pc = this.r.pCover.current, bar = this.r.player.current;
+    if (!g || !pc || !bar) { this.setState({ coverHidden: false }); return; }
+    g.style.transition = 'none'; g.style.backgroundImage = this.coverOf(t);
+    Object.assign(g.style, { left: from.left + 'px', top: from.top + 'px', width: from.width + 'px', height: from.height + 'px', opacity: 1 });
+    requestAnimationFrame(() => {
+      const r = pc.getBoundingClientRect(), b = bar.getBoundingClientRect();
+      const finalTop = r.top - b.top + (window.innerHeight - b.height);
+      g.style.transition = `left .8s ${EASE}, top .8s ${EASE}, width .8s ${EASE}, height .8s ${EASE}`;
+      Object.assign(g.style, { left: r.left + 'px', top: finalTop + 'px', width: r.width + 'px', height: r.height + 'px' });
+      this.timers.push(setTimeout(() => { this.setState({ coverHidden: false }); g.style.transition = 'opacity .2s'; g.style.opacity = 0; }, 800));
+    });
+  }
+  beginLoad() {
+    clearTimeout(this.loadTimer); clearInterval(this.tick);
+    if (this.frozen) return;
+    if (this.forced === 'loading') return;
+    if (this.forced === 'error') { this.loadTimer = setTimeout(() => this.setState({ pstate: 'error' }), 900); return; }
+    this.loadTimer = setTimeout(() => { this.setState({ pstate: 'playing' }); this.startTick(); }, 900);
+  }
+  startTick() {
+    clearInterval(this.tick);
+    this.tick = setInterval(() => {
+      if (this.state.pstate !== 'playing') return;
+      const t = this.track(this.state.player); if (!t) return;
+      const e = this.state.elapsed + .25;
+      if (e >= t.dur) { this.setState({ elapsed: t.dur }); this.step(1); } else this.setState({ elapsed: e });
+    }, 250);
+  }
+  toggle() {
+    const p = this.state.pstate;
+    if (p === 'playing') this.setState({ pstate: 'paused' });
+    else if (p === 'paused') { this.setState({ pstate: 'playing' }); this.startTick(); }
+    else if (p === 'error') { this.setState({ pstate: 'loading' }); this.beginLoad(); }
+  }
+  step(dir) {
+    const list = (this.playlist && this.playlist.length ? this.playlist : TRACKS.slice(0, 4).map(t => t.code));
+    let i = list.indexOf(this.state.player); if (i < 0) i = 0;
+    for (let n = 0; n < list.length; n++) { i = (i + dir + list.length) % list.length; const t = this.track(list[i]); if (t && this.canDock(t) && t.code !== this.state.player) { this.swapTo(t.code); this.beginLoad(); return; } }
+  }
+  dismiss() {
+    clearInterval(this.tick); clearTimeout(this.loadTimer);
+    this.setState({ playerShown: false, pstate: 'idle' });
+    this.timers.push(setTimeout(() => this.setState({ player: null, elapsed: 0 }), 420));
+  }
+  seek(e) {
+    const t = this.track(this.state.player); if (!t || this.state.pstate === 'loading' || this.state.pstate === 'error') return;
+    const r = e.currentTarget.getBoundingClientRect(); const ratio = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    this.setState({ elapsed: ratio * t.dur });
+  }
+  measureTitle() {
+    const box = this.r.titleBox.current; if (!box) { if (this.state.titleOverflow) this.setState({ titleOverflow: false }); return; }
+    const tb = box.querySelector('[data-titlebox]'), span = box.querySelector('[data-line]'); if (!tb || !span) return;
+    const over = span.getBoundingClientRect().width > tb.clientWidth + 1;
+    if (over !== this.state.titleOverflow) this.setState({ titleOverflow: over });
+  }
   goTo(i, e) {
     if (e) e.preventDefault();
     if (this.state.panel) this.closePanel();
+    if (this.state.works) this.closeWorks();
     if (this.reduced) { const el = this.r.secs[i].current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); return; }
     if (this.locked) return;
     window.scrollTo(0, i * window.innerHeight);
+  }
+  mkRow(t, i, inPanel, shown, mobile) {
+    const s = this.state, a = this.artistOf(t), canPlay = this.canDock(t), isCur = s.player === t.code, hov = s.whover === t.code;
+    return {
+      code: t.code, title: t.title, artist: a.name, badges: t.platforms, plays: fmtPlays(t.plays), duration: fmtDur(t.dur), year: t.year,
+      sub: mobile ? `${a.name} · ${t.platforms.join(' / ')}` : a.name,
+      cover: this.coverOf(t), canPlay, noPreview: !canPlay, spLink: this.link(t, 'SP'),
+      npLabel: hov ? 'OPEN IN SPOTIFY ↗' : '▶',
+      playGlyph: isCur && s.pstate === 'playing' ? '❚❚' : '▶', playAria: (isCur && s.pstate === 'playing' ? 'pause ' : 'play ') + t.title,
+      playColor: (hov || isCur) ? CHROME : 'rgba(232,230,225,.7)',
+      titleColor: (hov || isCur) ? '#fff' : '#E8E6E1',
+      op: !shown ? 0 : (s.fadeRow === t.code ? .25 : 1),
+      y: shown ? '0px' : '8px', delay: (i * (inPanel ? 40 : 60)) + 'ms',
+      offX: (!inPanel && i === 2 && !mobile) ? '1.2vw' : '0px',
+      onEnter: e => { if (e.pointerType === 'mouse') { this.setState({ whover: t.code }); this.setCursorScale(3); } },
+      onLeave: () => { if (this.state.whover === t.code) this.setState({ whover: null }); this.setCursorScale(1); },
+      onPlay: e => this.play(t.code, e),
+    };
   }
   renderVals() {
     const s = this.state, reduced = this.reduced, is3d = !reduced, mobile = this.isMobile, fine = s.fine && !reduced;
@@ -469,11 +775,20 @@ class Component extends DCLogic {
     })).concat([2, 3].map(i => ({ id: '', code: '00' + (i + 1), name: '— — —', role: '', aria: 'open slot', roleOpacity: 0, opacity: !rosterVis ? 0 : (focus ? .12 : .28), y: rosterVis ? '0px' : '10px', delay: (i * 80) + 'ms' })));
     const pa = ARTISTS.find(a => a.id === s.panel) || null;
     const panelArtist = pa ? { ...pa, hasPhoto: !!s.has[pa.id], noPhoto: !s.has[pa.id], bg: `url('${s.has[pa.id] || pa.photo}')`, file: pa.id.toUpperCase() + '.JPG' } : null;
-    const l0 = vis(0), m = vis(2), c = vis(3);
+    const l0 = vis(0), w = vis(2), m = vis(3), c = vis(4);
+    // works
+    const topRows = TRACKS.slice(0, 4).map((t, i) => this.mkRow(t, i, false, w && !s.worksShown, mobile));
+    const filtered = this.filtered();
+    const allRows = filtered.map((t, i) => this.mkRow(t, i, true, s.worksShown, mobile));
+    const fc = on => on ? CHROME : 'rgba(232,230,225,.6)', fl = on => on ? CHROME : 'transparent';
+    // player
+    const pt = this.track(s.player), ptA = pt && this.artistOf(pt);
+    const anim = []; if (s.titleOverflow) anim.push('hzPlayerMarquee 18s linear .4s infinite'); if (s.prevCover) anim.push(`hzWipe .4s ${EASE} both`);
+    const loadingP = s.pstate === 'loading', errorP = s.pstate === 'error';
     return {
       is3d, isMobile: mobile, fine, desktopFog: !mobile,
-      stagePos: is3d ? 'fixed' : 'relative', worldPos: is3d ? 'absolute' : 'relative', secPos: is3d ? 'absolute' : 'relative', spacerH: is3d ? '450vh' : '0px',
-      persp: 'none', z0: '0px', z1: '0px', z2: '0px', z3: '0px',
+      stagePos: is3d ? 'fixed' : 'relative', worldPos: is3d ? 'absolute' : 'relative', secPos: is3d ? 'absolute' : 'relative', spacerH: is3d ? '550vh' : '0px',
+      persp: 'none', z0: '0px', z1: '0px', z2: '0px', z3: '0px', z4: '0px',
       rootCursor: fine ? 'none' : 'auto', rowCursor: fine ? 'none' : 'pointer',
       revealDur: reduced ? '0s' : '.9s', maskDur: reduced ? '0s' : '1.4s',
       slOp: l0 ? 1 : 0, slY: l0 ? '0px' : '10px',
@@ -488,16 +803,53 @@ class Component extends DCLogic {
       closePanel: () => this.closePanel(),
       onSheetTouchStart: e => { this.sy = e.touches[0].clientY; this.sx = e.touches[0].clientX; },
       onSheetTouchMove: e => { if (!mobile || this.sy == null) return; const dy = e.touches[0].clientY - this.sy, dx = e.touches[0].clientX - this.sx; if ((dx > 90 && Math.abs(dy) < 80) || (dy > 120 && Math.abs(dx) < 70)) { this.sy = null; this.closePanel(); } },
+      // works
+      rowCols: mobile ? '40px minmax(0,1fr) auto auto' : 'auto clamp(40px,3.4vw,48px) minmax(0,1fr) auto auto auto auto',
+      codeDisplay: mobile ? 'none' : 'inline', badgesDisplay: mobile ? 'none' : 'flex', playsDisplay: mobile ? 'none' : 'inline',
+      topRows, allRows, worksEmpty: filtered.length === 0,
+      worksX: s.worksShown ? (mobile ? '0px' : '14vw') : '0px', worksListOp: s.worksShown ? 0 : 1,
+      openWorks: () => this.openWorks(), closeWorks: () => this.closeWorks(),
+      worksMounted: s.works, worksTransform: s.worksShown ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)',
+      worksBackdropDisplay: s.works && s.worksShown ? 'block' : 'none',
+      worksPanelWidth: mobile ? '100vw' : 'clamp(480px, 52vw, 760px)', worksHeadDir: mobile ? 'row-reverse' : 'row',
+      worksHeadPad: s.worksScrolled ? '4px' : '10px', worksHeadBorder: s.worksScrolled ? 'rgba(232,230,225,.14)' : 'transparent',
+      onWorksScroll: e => { const sc = e.currentTarget.scrollTop > 8; if (sc !== this.state.worksScrolled) this.setState({ worksScrolled: sc }); },
+      onWorksTouchStart: e => { this.wy = e.touches[0].clientY; this.wx = e.touches[0].clientX; this.wsTop = this.r.worksList.current ? this.r.worksList.current.scrollTop : 0; },
+      onWorksTouchMove: e => { if (!mobile || this.wy == null) return; const dy = e.touches[0].clientY - this.wy, dx = e.touches[0].clientX - this.wx; if (dy > 120 && Math.abs(dx) < 70 && this.wsTop < 4) { this.wy = null; this.closeWorks(); } },
+      fAllColor: fc(s.wf === 'all'), fAllLine: fl(s.wf === 'all'), fSkeshColor: fc(s.wf === 'skesh'), fSkeshLine: fl(s.wf === 'skesh'), fNuzziColor: fc(s.wf === 'nuzzi'), fNuzziLine: fl(s.wf === 'nuzzi'),
+      fSCColor: fc(s.wp === 'SC'), fSCLine: fl(s.wp === 'SC'), fSPColor: fc(s.wp === 'SP'), fSPLine: fl(s.wp === 'SP'),
+      setAll: () => this.setFilter({ wf: 'all' }), setSkesh: () => this.setFilter({ wf: 'skesh' }), setNuzzi: () => this.setFilter({ wf: 'nuzzi' }),
+      toggleSC: () => this.setFilter({ wp: s.wp === 'SC' ? 'all' : 'SC' }), toggleSP: () => this.setFilter({ wp: s.wp === 'SP' ? 'all' : 'SP' }),
+      listPadB: pt ? (mobile ? '96px' : '84px') : '32px', worksFootMb: pt ? (mobile ? '68px' : '60px') : '0px',
+      // player
+      playerMounted: !!pt, playerY: s.playerShown ? '0%' : '110%', playerOp: s.playerShown ? 1 : 0,
+      playerDur: s.playerShown ? (reduced ? '0s' : '.8s') : '.4s', playerEase: s.playerShown ? EASE : 'cubic-bezier(.55,.085,.68,.53)',
+      playerH: mobile ? '64px' : '56px',
+      pCover: pt ? this.coverOf(pt) : 'none', coverOp: s.coverHidden ? 0 : 1,
+      hasPrevCover: !!s.prevCover, prevCover: s.prevCover || 'none', coverInAnim: s.prevCover ? `hzCoverIn .5s ${EASE} both` : 'none',
+      pLine: pt ? `${pt.title} — ${ptA.name}` : '', pBadge: pt ? pt.platforms.join(' · ') : '',
+      pError: errorP, pNormalA: !errorP && s.titleSlot === 0, pNormalB: !errorP && s.titleSlot === 1, pLink: pt ? this.link(pt, pt.platforms[0]) : '#',
+      titleAnim: anim.join(', ') || 'none', titleOverflow: s.titleOverflow,
+      progressPct: pt && !loadingP && !errorP ? `${Math.min(100, s.elapsed / pt.dur * 100).toFixed(2)}%` : '0%',
+      thumbOp: s.progHover && !loadingP && !errorP ? 1 : 0, progAnim: loadingP ? 'hzPulse 1.2s ease-in-out infinite' : 'none',
+      timerText: pt ? ((loadingP || errorP) ? (mobile ? '--:--' : `--:-- / ${fmtDur(pt.dur)}`) : (mobile ? fmtDur(s.elapsed) : `${fmtDur(s.elapsed)} / ${fmtDur(pt.dur)}`)) : '',
+      playPauseGlyph: s.pstate === 'playing' ? '❚❚' : '▶', playPauseAria: s.pstate === 'playing' ? 'pause' : 'play',
+      skipDisplay: mobile ? 'none' : 'flex',
+      onProgEnter: () => this.setState({ progHover: true }), onProgLeave: () => this.setState({ progHover: false }),
+      seek: e => this.seek(e), toggle: () => this.toggle(), prevTrack: () => this.step(-1), nextTrack: () => this.step(1), dismissPlayer: () => this.dismiss(),
+      // chrome
       loadingVisible: s.loading, loadingOp: s.loadingOp,
       typed0: s.typed[0], typed1: s.typed[1], typed2: s.typed[2], typed3: s.typed[3], typed4: s.typed[4],
       pctText: String(s.pct).padStart(3, '0'),
       skipLoading: () => this.finishLoading(),
-      goHome: e => this.goTo(0, e), goRoster: e => this.goTo(1, e), goAbout: e => this.goTo(2, e), goContact: e => this.goTo(3, e),
-      nav1: s.active === 1 ? 1 : .55, nav2: s.active === 2 ? 1 : .55, nav3: s.active === 3 ? 1 : .55,
-      cueVis: (s.active >= 3 || reduced || s.panel) ? 'hidden' : 'visible',
+      goHome: e => this.goTo(0, e), goRoster: e => this.goTo(1, e), goWorks: e => this.goTo(2, e), goAbout: e => this.goTo(3, e), goContact: e => this.goTo(4, e),
+      brandDisplay: mobile ? 'none' : 'inline', navSize: mobile ? '9px' : '10px', navTrack: mobile ? '.1em' : '.16em',
+      nav1: s.active === 1 ? 1 : .55, nav2: s.active === 2 ? 1 : .55, nav3: s.active === 3 ? 1 : .55, nav4: s.active === 4 ? 1 : .55,
+      cueVis: (s.active >= STOPS - 1 || reduced || s.panel || s.works || pt) ? 'hidden' : 'visible',
       preventDefault: e => e.preventDefault(),
-      worldRef: this.r.world, sec0: this.r.secs[0], sec1: this.r.secs[1], sec2: this.r.secs[2], sec3: this.r.secs[3],
+      worldRef: this.r.world, sec0: this.r.secs[0], sec1: this.r.secs[1], sec2: this.r.secs[2], sec3: this.r.secs[3], sec4: this.r.secs[4],
       fadeRef: this.r.fade, endRef: this.r.end, grainRef: this.r.grain, cursorRef: this.r.cur, cursorInRef: this.r.curIn, tiltRef: this.r.tilt, spinRef: this.r.spin, veilRef: this.r.veil,
+      ghostRef: this.r.ghost, playerRef: this.r.player, playerCoverRef: this.r.pCover, coverGrainRef: this.r.coverGrain, titleBoxRef: this.r.titleBox, worksListRef: this.r.worksList,
       annotate: !!this.props.annotations, annoLines: ANNO[s.active] || ANNO[0],
     };
   }
