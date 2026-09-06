@@ -1,0 +1,9 @@
+{
+  "name": "hazedivision",
+  "private": true,
+  "description": "Haze Division prototype site — static page + two serverless endpoints for the roster's uploads",
+  "engines": { "node": "22.x" },
+  "scripts": {
+    "dev": "node scripts/dev.mjs"
+  }
+}
