@@ -248,10 +248,10 @@ a{color:#E8E6E1;text-decoration:none}a:hover{color:#fff}
       </div>
       <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="width:36px;height:2px;background:rgba(232,230,225,.3);margin:6px auto 0;flex:none"></div></sc-if>
       <div style="display:flex;flex-wrap:wrap;gap:4px 28px;padding:10px clamp(18px,2.4vw,34px) 6px;font-size:10px;letter-spacing:.16em;flex:none">
-        <div style="display:flex;gap:18px">
-          <button onClick="{{ setAll }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fAllColor }};border-bottom:1px solid {{ fAllLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">ALL</button>
-          <button onClick="{{ setSkesh }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fSkeshColor }};border-bottom:1px solid {{ fSkeshLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">SKESH</button>
-          <button onClick="{{ setNuzzi }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fNuzziColor }};border-bottom:1px solid {{ fNuzziLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">NUZZI</button>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <sc-for list="{{ artistFilters }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.set }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ f.color }};border-bottom:1px solid {{ f.line }};transition:color .3s,border-color .3s" style-hover="color:#fff">{{ f.label }}</button>
+          </sc-for>
         </div>
         <div style="display:flex;gap:18px">
           <button onClick="{{ toggleSC }}" style="all:unset;font:inherit;cursor:pointer;padding:12px 0 6px;color:{{ fSCColor }};border-bottom:1px solid {{ fSCLine }};transition:color .3s,border-color .3s" style-hover="color:#fff">SC</button>
@@ -409,7 +409,7 @@ class Component extends DCLogic {
       has: {},
       whover: TRACKS.some(t => t.code === q.get('whover')) ? q.get('whover') : null,
       works: q.get('works') === '1', worksShown: q.get('works') === '1', worksScrolled: false,
-      wf: ['skesh', 'nuzzi'].includes(q.get('wf')) ? q.get('wf') : 'all',
+      wf: ARTISTS.some(a => a.id === q.get('wf')) ? q.get('wf') : 'all',
       wp: ['SC', 'SP'].includes(wp) ? wp : 'all',
       player: playQ, playerShown: !!playQ,
       pstate: playQ ? (this.forced || 'playing') : 'idle',
@@ -890,9 +890,8 @@ class Component extends DCLogic {
       onWorksScroll: e => { const sc = e.currentTarget.scrollTop > 8; if (sc !== this.state.worksScrolled) this.setState({ worksScrolled: sc }); },
       onWorksTouchStart: e => { this.wy = e.touches[0].clientY; this.wx = e.touches[0].clientX; this.wsTop = this.r.worksList.current ? this.r.worksList.current.scrollTop : 0; },
       onWorksTouchMove: e => { if (!mobile || this.wy == null) return; const dy = e.touches[0].clientY - this.wy, dx = e.touches[0].clientX - this.wx; if (dy > 120 && Math.abs(dx) < 70 && this.wsTop < 4) { this.wy = null; this.closeWorks(); } },
-      fAllColor: fc(s.wf === 'all'), fAllLine: fl(s.wf === 'all'), fSkeshColor: fc(s.wf === 'skesh'), fSkeshLine: fl(s.wf === 'skesh'), fNuzziColor: fc(s.wf === 'nuzzi'), fNuzziLine: fl(s.wf === 'nuzzi'),
+      artistFilters: [{ id: 'all', label: 'ALL' }].concat(ARTISTS.map(a => ({ id: a.id, label: a.name }))).map(f => ({ label: f.label, color: fc(s.wf === f.id), line: fl(s.wf === f.id), set: () => this.setFilter({ wf: f.id }) })),
       fSCColor: fc(s.wp === 'SC'), fSCLine: fl(s.wp === 'SC'), fSPColor: fc(s.wp === 'SP'), fSPLine: fl(s.wp === 'SP'),
-      setAll: () => this.setFilter({ wf: 'all' }), setSkesh: () => this.setFilter({ wf: 'skesh' }), setNuzzi: () => this.setFilter({ wf: 'nuzzi' }),
       toggleSC: () => this.setFilter({ wp: s.wp === 'SC' ? 'all' : 'SC' }), toggleSP: () => this.setFilter({ wp: s.wp === 'SP' ? 'all' : 'SP' }),
       listPadB: pt ? (mobile ? '96px' : '84px') : '32px', worksFootMb: pt ? (mobile ? '68px' : '60px') : '0px',
       // player
