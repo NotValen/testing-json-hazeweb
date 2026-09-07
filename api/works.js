@@ -8,6 +8,7 @@ const { artistTopTracks } = require('../lib/sp');
 const ARTISTS = [
   { id: 'skesh', sc: 'https://soundcloud.com/skeshbtw', sp: '42ZKXyAY5TLpkLY2lncU9y' },
   { id: 'nuzzi', sc: 'https://soundcloud.com/1nuji', sp: '0Lsj6iyj2QAJA6X2rOCLy7' },
+  { id: 'shinru', sc: 'https://soundcloud.com/shinru2006', sp: null }, // producer, SoundCloud only
 ];
 
 // "Everything feat. NUZZi (prod. skesh)" and "Everything" should meet.
@@ -33,7 +34,7 @@ module.exports = async (req, res) => {
   const results = await Promise.all(ARTISTS.map(async a => {
     const [sc, sp] = await Promise.all([
       userTracks(a.sc).catch(e => { errors.push(`sc:${a.id}: ${e.message}`); return null; }),
-      artistTopTracks(a.sp).catch(e => { errors.push(`sp:${a.id}: ${e.message}`); return []; }),
+      a.sp ? artistTopTracks(a.sp).catch(e => { errors.push(`sp:${a.id}: ${e.message}`); return []; }) : Promise.resolve([]),
     ]);
     return { a, sc, sp };
   }));
