@@ -1,5 +1,4 @@
 .vercel
 .DS_Store
 node_modules
-cf.txt
-creds.txt
+
