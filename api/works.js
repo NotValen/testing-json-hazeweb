@@ -8,7 +8,8 @@ const { artistTopTracks } = require('../lib/sp');
 const ARTISTS = [
   { id: 'skesh', sc: 'https://soundcloud.com/skeshbtw', sp: '42ZKXyAY5TLpkLY2lncU9y' },
   { id: 'nuzzi', sc: 'https://soundcloud.com/1nuji', sp: '0Lsj6iyj2QAJA6X2rOCLy7' },
-  { id: 'shinru', sc: 'https://soundcloud.com/shinru2006', sp: null }, // producer, SoundCloud only
+  { id: 'shinru', sc: 'https://soundcloud.com/shinru2006', sp: null },
+  { id: 'valenlmao', sc: 'https://soundcloud.com/valenferbyan', sp:'0oowY63X7mj7aiwhtAFSKx' }, // producer, SoundCloud only
 ];
 
 // "Everything feat. NUZZi (prod. skesh)" and "Everything" should meet.
